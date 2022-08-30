@@ -55,6 +55,7 @@ module.exports = {
         })
 
         // Add this to default thread to avoid 'length of undefined' error. convo.before will always skip this
+        // FYI: This fires when db is not setup properly!
         convo.say("Anything..");
 
         module.exports.addCreatorAsUserQuestion(convo);
@@ -152,7 +153,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
             {
                 default: true,
                 handler: async (response, inConvo, bot, full_message) => {
-                    if (full_message.MediaContentType0 === V_CARD_TYPE) {
+                    if (full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
                         try {
                             let user = await utils.vCardMessageToUser(full_message);
                             let validatedNumber = phone(user.phoneNumber, "USA");
