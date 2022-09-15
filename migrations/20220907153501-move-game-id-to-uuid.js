@@ -3,26 +3,22 @@ const { DataTypes } = require("sequelize"); // Import the built-in data types
 const { v4: uuidv4 } = require("uuid");
 const models = require('../models');
 
-
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('games', 'uuid', { 
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      // allowNull: false,
       primaryKey: true,
     });
     const games = await models.game.findAll({})
     const gameIdToUuidMap = {}
     for (const game of games) {
-      console.log('whats this?', game.id)
       const myUuid = uuidv4();
       gameIdToUuidMap[game.id] = myUuid
       await game.update({
         uuid: myUuid,
       })
     }
-    console.log(gameIdToUuidMap)
     await queryInterface.removeConstraint(
       'turns',
       'gameId_fk',
@@ -46,21 +42,24 @@ module.exports = {
     for (const turn of turns) {
       turnIdToUuidMap[turn.id] = gameIdToUuidMap[turn.gameId]
     }
-    console.log(turnIdToUuidMap)
 
     await queryInterface.removeColumn('turns', 'gameId')
     await queryInterface.addColumn('turns', 'gameId', { 
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
-      // allowNull: false,
     });
-    turns = await models.turn.findAll({}) // todo: unnecessary?
+
+    turns = await models.turn.findAll({})
     for (const turn of turns) {
       const uuidForTurn = turnIdToUuidMap[turn.id]
       await turn.update({
         gameId: uuidForTurn,
       })
     }
+    await queryInterface.changeColumn('turns', 'gameId', {
+      type: DataTypes.UUID,
+      allowNull: false,
+    })
     return queryInterface.addConstraint(
       'turns',
       ['gameId'],
@@ -75,7 +74,6 @@ module.exports = {
         onUpdate: 'cascade'
       }
     )
-    // TODO: null constraints
   },
 
   down: async (queryInterface, Sequelize) => {
