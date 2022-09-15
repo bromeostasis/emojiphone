@@ -4,7 +4,8 @@ module.exports = (sequelize, DataTypes) => {
   	completed: DataTypes.BOOLEAN,
     restarted: DataTypes.BOOLEAN,
     token: DataTypes.STRING,
-    tokenExpiry: DataTypes.DATE
+    tokenExpiry: DataTypes.DATE,
+    uuid: DataTypes.UUID,
   }, {});
   game.associate = function(models) {
     // associations can be defined here
