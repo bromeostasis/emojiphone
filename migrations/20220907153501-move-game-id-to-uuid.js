@@ -4,8 +4,9 @@ const { v4: uuidv4 } = require("uuid");
 const models = require('../models');
 
 
-// NOTE: BEFORE RUNNING THIS, be sure your models are up to date.
+// NOTE: BEFORE RUNNING THIS, be sure your models are up to date.  Specifically game.uuid should be present.
 // Out of date models will result in borken queries and headaches
+// NOTE: Make sure turns.gameId is populated
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('games', 'uuid', { 
@@ -51,6 +52,7 @@ module.exports = {
     })
     await queryInterface.changeColumn('games', 'oldId', {
       type: DataTypes.INTEGER, // necessary for validation
+      autoIncrementIdentity: true,
       allowNull: true,
     })
 
@@ -77,7 +79,8 @@ module.exports = {
       }
     )
   },
-  // Note: NOT reverse-engineering ids from uuids.. Not super worth it at this moment
+  // Note: NOT reverse-engineering turn.gameIds from uuids.. Not super worth it at this moment
+  // Note: You may need to populate 'oldId' if running this reverse migration
   down: async (queryInterface, Sequelize) => {
     await queryInterface.removeConstraint(
       'turns',
@@ -97,7 +100,7 @@ module.exports = {
 
 
     await queryInterface.changeColumn('games', 'id', {
-      type: DataTypes.INTEGER, // necessary for validation
+      type: DataTypes.INTEGER, // necessary to redefine type for validation
       allowNull: false,
     })
 
@@ -122,10 +125,6 @@ module.exports = {
         onDelete: 'cascade',
         onUpdate: 'cascade'
       }
-    )
-    return queryInterface.removeConstraint(
-      'turns',
-      ['gameId']
     )
   }
 };

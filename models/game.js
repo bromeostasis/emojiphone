@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     restarted: DataTypes.BOOLEAN,
     token: DataTypes.STRING,
     tokenExpiry: DataTypes.DATE,
-    uuid: DataTypes.UUID,
+    uuid: DataTypes.UUID, // For temporary column in migration, not used live
     id: {
       type: DataTypes.UUID,
       primaryKey: true,
