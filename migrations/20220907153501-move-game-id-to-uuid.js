@@ -4,9 +4,10 @@ const { v4: uuidv4 } = require("uuid");
 const models = require('../models');
 
 
-// NOTE: BEFORE RUNNING THIS, be sure your models are up to date.  Specifically game.uuid should be present.
-// Out of date models will result in borken queries and headaches
-// NOTE: Make sure turns.gameId is populated
+// URGENT: BEFORE RUNNING THIS, be sure to ADD this to the game model:
+// uuid: DataTypes.UUID
+// Once the migration is successful, you must remove it. Hacky, but here we are :(
+// Note: Make sure turns.gameId is populated
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('games', 'uuid', { 
@@ -79,6 +80,7 @@ module.exports = {
       }
     )
   },
+  // URGENT: After running this, update game model to remove uuid
   // Note: NOT reverse-engineering turn.gameIds from uuids.. Not super worth it at this moment
   // Note: You may need to populate 'oldId' if running this reverse migration
   down: async (queryInterface, Sequelize) => {
