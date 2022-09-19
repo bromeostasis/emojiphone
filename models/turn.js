@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: false,
     },
     gameId: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.UUID,
       unique: 'userGameComposite',
     },
   }, {});
