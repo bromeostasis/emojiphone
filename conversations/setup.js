@@ -4,6 +4,7 @@ const { BotkitConversation } = require('botkit');
 const utils = require('../utils/utils');
 const setupUtils = require('../utils/setup_utils');
 const turnConversation = require('./turn');
+const cancelConversation = require('./cancel');
 const models = require('../models');
 
 const V_CARD_TYPE = 'text/x-vcard';
@@ -227,7 +228,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
         convo.addMessage({
-            text: 'Ok, we will begin the game!',
+            text: `Ok, we will begin the game! ${cancelConversation.CANCEL_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, START_GAME_THREAD);
 

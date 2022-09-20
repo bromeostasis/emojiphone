@@ -1,6 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 const utils = require('../utils/utils');
+const cancelConversation = require('./cancel');
 const turnUtils = require('../utils/turn_utils');
 const models = require('../models');
 const MessageType = require('../types/message_type');
@@ -35,7 +36,7 @@ module.exports = {
             action: COMPLETE_ACTION
         }, TURN_ERROR_THREAD)
 
-        convo.addMessage({text: 'Thanks, your turn has been recorded! You will be notified when the game completes.', action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
+        convo.addMessage({text: `Thanks, your turn has been recorded! You will be notified when the game completes. ${cancelConversation.CANCEL_PHRASE}`, action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
 
         module.exports.addTurnQuestion(convo);
         convo.after(async (results, bot) => {
