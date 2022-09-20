@@ -2,10 +2,9 @@ const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
 const models = require('../models');
-const turnUtils = require('../utils/turn_utils');
-const setupUtils = require('../utils/setup_utils');
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
+const cancelUtils = require('../utils/cancel_utils');
 const turnConversation = require('../conversations/turn');
 const setupConversation = require('../conversations/setup');
 
@@ -14,8 +13,6 @@ const WONT_CANCEL_THREAD = 'wontCancel'
 const NO_ACTIVE_GAMES_THREAD = 'noGames'
 const ALREADY_CANCELED_THREAD = 'alreadyCancelled'
 const COMPLETE_ACTION = 'complete';
-
-const CANCELLED_MESSAGE = `Your game was cancelled! Feel free to start a new game by testing me the word "${setupConversation.INITIATE_GAME_KEYWORD}".`
 
 module.exports = {
     CANCEL_CONVERSATION: 'cancel',
@@ -34,12 +31,12 @@ module.exports = {
         }, WONT_CANCEL_THREAD);
 
         convo.addMessage({
-            text: CANCELLED_MESSAGE, 
+            text: 'Your game has already been cancelled, no need to do anything else!', 
             action: COMPLETE_ACTION
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: `You're not in any active games that you can cancel. Text me the word "${setupConversation.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
+            text: `You're not in any active games that you can cancel. Text me the word "${setupConversation.INITIATE_GAME_KEYWORD}" to begin a new game!`, 
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         
@@ -47,34 +44,32 @@ module.exports = {
     },
     setConversationVariables: async (convo) => {
         try {
-            let phoneNumber = phone(convo.vars.channel)[0];
-            let game = await gameUtils.getLastPlayedGameByPhoneNumber(phoneNumber);
-            console.log('gamin?!', game.id)
+            const phoneNumber = phone(convo.vars.channel)[0];
+            const game = await gameUtils.getCurrentGameByPhoneNumber(phoneNumber);
             if (!game) {
                 return await convo.gotoThread(NO_ACTIVE_GAMES_THREAD)
             }
 
-            if (await gameUtils.isGameStillInProgress(game.id)) {
-                return await convo.gotoThread(NOT_FINISHED_THREAD)
-            }
+            const user = await utils.getUserByPhoneNumber(phoneNumber);
+            await convo.setVar("user", user)
+
             await convo.setVar("gameId", game.id);
-            let turns = await turnUtils.getUsersAndMessagesFromGameId(game.id);
-            let firstNames = turns.map(turn => turn.user.firstName);
+            const firstNames = await gameUtils.getFirstNamesByGameId(game.id);
             await convo.setVar("firstNames", firstNames.join(', '));
         } catch (e) {
             console.log("ERR", e);
         }
     },
     addCancelQuestion: (convo) => {
-        let cancelPrompt = "You're about to cancel your game with the following people: {{vars.firstNames}}. Are you sure you want to do this? Respond with YES to continue."
+        let cancelPrompt = `You're about to cancel your game with the following people: {{vars.firstNames}}. Are you sure you want to do this? Respond with "Yes" to confirm cancellation or "No" to allow the game to continue.`
         convo.addQuestion(cancelPrompt, 
             [{
                 pattern: 'yes',
                 handler: async function(response, inConvo, bot, full_message) {
                     let game = await models.game.findByPk(inConvo.vars.gameId);
                     if (!game.completed) {
+                        await cancelUtils.cancelGame(game, inConvo.vars.user);
                         await convo.addAction('complete');
-                        await module.exports.cancelGame(game);
                     } else {
                         await inConvo.gotoThread(ALREADY_CANCELED_THREAD);
                     }
@@ -89,27 +84,5 @@ module.exports = {
         );
 
 
-    },
-    cancelGame: async (game) => {
-        if (!game.completed) {
-            await game.update({completed: true});
-            // Cancel current user's conversation
-            const currentTurn = await models.turn.findOne({
-                gameId: game.id,
-                isCurrent: true
-            })
-
-
-            const turnsMaybe = await models.turn.bulkUpdate({
-                isCurrent: false
-            }, {
-                where: {
-                    gameId: game.id
-                }
-            })
-
-            await utils.bot.startConversationWithUser(turn.user.phoneNumber);
-            await utils.bot.say(CANCELLED_MESSAGE)
-        }
     },
 }
