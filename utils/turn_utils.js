@@ -78,10 +78,11 @@ ${name}: ${userMessage.message}`
 
 If you'd like to start a group message to discuss your game, just click one of the following links!
 
-Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
-iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
-
 If you'd like to restart your latest game, simply send a message to this number with the word "${module.exports.RESTART_KEYWORD}".`
+
+// Testing weird link theory
+// Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
+// iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
         }
 
         return {

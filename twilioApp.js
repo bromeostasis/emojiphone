@@ -27,6 +27,10 @@ module.exports = {
             
         })
 
+        utils.controller.webserver.get('/test', async(req, res) => {
+            res.status(200).send('test received')
+        })
+
         await setupConversation.setupSetupConversation();
         await turnConversation.setupTurnConversation();
         await restartConversation.setupRestartConversation();
