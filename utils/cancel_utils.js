@@ -31,10 +31,14 @@ module.exports = {
             await game.update({completed: true});
 
             await sendCancelledGameMessages(numAffectedAndTurns[1], cancellingUser)
+        } else {
+            console.log('Trying to cancel game that is already completed:', game, cancellingUser)
         }
     },
 }
 
+// "Documentation" for postgresStorage comes from a combination of here: https://www.npmjs.com/package/botbuilder-storage-postgres
+// And the PostgresStorage.ts file in this library's source code ^^ 😅
 const clearStoredConversationsFromTurn = async (turn) => {
     if (turn) {
         const postgresStorageKey = utils.getPostgresStorageKeyFromPhoneNumber(turn.user.phoneNumber)

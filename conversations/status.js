@@ -1,3 +1,5 @@
+const phone = require("phone");
+
 const gameUtils = require('../utils/game_utils');
 const turnUtils = require('../utils/turn_utils');
 
@@ -8,7 +10,7 @@ module.exports = {
     STATUS_KEYWORD: 'status',
     STATUS_PHRASE: `Text "status" for a status update on your game.`,
     getStatusMessage: async (bot, message) => {
-    	const phoneNumber = message.channel
+    	const phoneNumber = phone(message.channel)
     	const currentGame = await gameUtils.getLatestGameByPhoneNumber(phoneNumber)
 
     	if (!currentGame) {

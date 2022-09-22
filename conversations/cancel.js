@@ -1,7 +1,6 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
-const models = require('../models');
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');

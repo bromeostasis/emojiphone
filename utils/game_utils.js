@@ -29,23 +29,6 @@ module.exports = {
 
         return count != 0
     }, 
-    getLastPlayedTurnByPhoneNumber: async (phoneNumber) => {
-        return await models.turn.findOne({
-            where: {
-                '$user.phoneNumber$': phoneNumber,
-                receivedAt: {[Op.not]: null}
-            },
-            include: [
-                {
-                    model: models.user, as: "user",
-                    attributes: ['phoneNumber']
-                }
-            ],
-            order: [
-                ['receivedAt', 'DESC']
-            ]
-        })
-    }, 
     getLatestTurnByPhoneNumber: async (phoneNumber) => {
         return await models.turn.findOne({
             where: {
