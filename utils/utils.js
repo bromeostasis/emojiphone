@@ -14,6 +14,7 @@ const models = require('../models');
 module.exports = {
     bot: {},
     controller: {},
+    postgresStorage: {},
     /**
      * Provided an MMS vCard text message, fetch the vCard data and return a "User" js object (fname, lname, phone number).
      * @param  {BotKit Response} message 
@@ -53,6 +54,7 @@ module.exports = {
         })
 
         module.exports.bot = await module.exports.controller.spawn({});
+        module.exports.postgresStorage = postgresStorage;
     },
     getUserByPhoneNumber: async (phoneNumber) => {
         let user = await models.user.findOne({where: {phoneNumber: phoneNumber}});        
@@ -75,5 +77,8 @@ module.exports = {
         }
         let dbUser = await models.user.create(user)
         return dbUser;
-    }
+    },
+    getPostgresStorageKeyFromPhoneNumber: (phoneNumber) => {
+        return `twilio-sms/conversations/${phoneNumber}-${phoneNumber}/`
+    },
 }
