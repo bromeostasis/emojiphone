@@ -55,7 +55,7 @@ module.exports = {
     setConversationVariables: async (convo) => {
         try {
             let phoneNumber = phone(convo.vars.channel)[0];
-            let game = await gameUtils.getLastPlayedGameByPhoneNumber(phoneNumber);
+            let game = await gameUtils.getLatestGameByPhoneNumber(phoneNumber, true);
             if (!game) {
                 return await convo.gotoThread(NO_GAMES_THREAD)
             }
@@ -64,7 +64,7 @@ module.exports = {
                 return await convo.gotoThread(NOT_FINISHED_THREAD)
             }
             await convo.setVar("gameId", game.id);
-            let turns = await turnUtils.getUsersAndMessagesFromGameId(game.id);
+            let turns = await turnUtils.getAllTurns(game.id);
             let firstNames = turns.map(turn => turn.user.firstName);
             await convo.setVar("firstNames", firstNames.join(', '));
         } catch (e) {
@@ -105,7 +105,7 @@ module.exports = {
             if (Array.isArray(previousTurns) && previousTurns.length > 0 && Array.isArray(newTurns) && newTurns.length > 0) {
                 for (let turn of previousTurns) {
                     await utils.bot.startConversationWithUser(turn.user.phoneNumber);
-                    await utils.bot.say("Your game was restarted! ${RESTARTED_MESSAGE}")
+                    await utils.bot.say(`Your game was restarted! ${RESTARTED_MESSAGE}`)
                 }
                 turnConversation.takeFirstTurn(newTurns[0].gameId);
             } else {

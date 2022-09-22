@@ -9,7 +9,7 @@ module.exports = {
     STATUS_PHRASE: `Text "status" for a status update on your game.`,
     getStatusMessage: async (bot, message) => {
     	const phoneNumber = message.channel
-    	const currentGame = await gameUtils.getCurrentGameByPhoneNumber(phoneNumber)
+    	const currentGame = await gameUtils.getLatestGameByPhoneNumber(phoneNumber)
 
     	if (!currentGame) {
     		return NOT_IN_GAME_MESSAGE

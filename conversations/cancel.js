@@ -44,7 +44,7 @@ module.exports = {
     setConversationVariables: async (convo) => {
         try {
             const phoneNumber = phone(convo.vars.channel)[0];
-            const game = await gameUtils.getCurrentGameByPhoneNumber(phoneNumber);
+            const game = await gameUtils.getLatestGameByPhoneNumber(phoneNumber);
             if (!game) {
                 return await convo.gotoThread(NO_ACTIVE_GAMES_THREAD)
             }

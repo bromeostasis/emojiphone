@@ -2,14 +2,7 @@ const models = require('../models');
 const { Op } = require('sequelize');
 
 module.exports = {
-    getLastPlayedGameByPhoneNumber: async (phoneNumber) => {
-        const lastPlayedTurn = await module.exports.getLastPlayedTurnByPhoneNumber(phoneNumber)
-
-        if (lastPlayedTurn) {
-            return await models.game.findByPk(lastPlayedTurn.gameId);
-        }
-    },
-    getCurrentGameByPhoneNumber: async (phoneNumber) => {
+    getLatestGameByPhoneNumber: async (phoneNumber, mustBeCompleted=false) => {
         const latestTurn = await module.exports.getLatestTurnByPhoneNumber(phoneNumber)
 
         // This logic relies on the fact that only one game can be played at a time
@@ -17,7 +10,7 @@ module.exports = {
         const lastPlayedGame = await models.game.findOne({
             where: {
                 id: latestTurn.gameId,
-                completed: false
+                completed: mustBeCompleted
             }
         })
 

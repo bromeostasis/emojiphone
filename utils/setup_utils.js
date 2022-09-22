@@ -77,22 +77,21 @@ module.exports = {
     * @param  {integer} gameId gameId of game to be restarted
     */
     setupPreviouslyPlayedGame: async (gameId) => {
-        let previousTurns = await module.exports.getActiveUsersByGameId(gameId);
+        let previousTurns = await module.exports.getUsersByGameId(gameId);
         let users = previousTurns.map(turn => turn.user);
         let newTurns = await module.exports.setupGame([], users);
         return {previousTurns: previousTurns, newTurns: newTurns}
     },
     /**
-    * Get users that participated (message not null) in a completed game
+    * Get users that were in a completed game (whether they sent a message or not)
     * @param  {integer} gameId gameId of game to be restarted
     */
-    getActiveUsersByGameId: async (gameId) => {
+    getUsersByGameId: async (gameId) => {
         return await models.turn.findAll(
             {
                 attributes: [],
                 where: {
                     gameId: gameId,
-                    message: {[Op.not]: null}
                 }, 
                 include: [
                     {

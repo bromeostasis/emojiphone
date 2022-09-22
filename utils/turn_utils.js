@@ -40,6 +40,21 @@ module.exports = {
     getNumberOfTurnsLeft: async (gameId) => {
         return await models.turn.count({where: {gameId: gameId, receivedAt: null}})
     },
+    getAllTurns: async (gameId) => {
+        return await models.turn.findAll(
+            {
+                where: {
+                    gameId: gameId,
+                }, 
+                include: [
+                    {
+                        model: models.user, as: "user",
+                        attributes: ['firstName', 'lastName', 'phoneNumber']
+                    }
+                ],
+            }
+        )
+    },
     sendEndGameMessage: async (gameId) => {
         let messageAndPhoneNumbers = await module.exports.getEndGameMessageWithPhoneNumbers(gameId);
 
