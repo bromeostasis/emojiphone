@@ -1,6 +1,5 @@
 const models = require('../models');
 const utils = require('../utils/utils');
-const setupConversation = require('../conversations/setup');
 
 module.exports = {	
     cancelGame: async (game, cancellingUser) => {
@@ -55,6 +54,6 @@ const sendCancelledGameMessages = async (turns, cancellingUser) => {
         if (user.id !== cancellingUser.id) {
             cancelledByPhrase = ` by ${cancellingUser.firstName}`
         }
-        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! Feel free to start a new game by texting me the word "${setupConversation.INITIATE_GAME_KEYWORD}".`)
+        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! Feel free to start a new game by texting me the word "start".`) //TODO: Centralize
     }
 }

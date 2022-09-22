@@ -35,7 +35,7 @@ module.exports = {
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: `You're not in any active games that you can finish. Text me the word "start" to begin a new game!`, // TODO: Centralize
+            text: `You are not currently playing in a game! Text me the word "start" to begin a new game!`, // TODO: Centralize
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         

@@ -1,12 +1,12 @@
 const gameUtils = require('../utils/game_utils');
 const turnUtils = require('../utils/turn_utils');
 
-const NOT_IN_GAME_MESSAGE = `You are not currently playing in a game! Text me the word "start" to begin a new game!` // TODO: Cenralize/standardize with other variables
+const NOT_IN_GAME_MESSAGE = `You are not currently playing in a game! Text me the word "start" to begin a new game!` // TODO: Centralize/standardize with other variables
 
 module.exports = {
     STATUS_CONVERSATION: 'status',
     STATUS_KEYWORD: 'status',
-    STATUS_PHRASE: `Text "status" to finish your game early.`,
+    STATUS_PHRASE: `Text "status" for a status update on your game.`,
     getStatusMessage: async (bot, message) => {
     	const phoneNumber = message.channel
     	const currentGame = await gameUtils.getCurrentGameByPhoneNumber(phoneNumber)

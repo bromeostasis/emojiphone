@@ -8,6 +8,8 @@ const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn');
 const setupConversation = require('../conversations/setup');
+const cancelConversation = require('./cancel');
+const statusConversation = require('./status');
 
 const ALREADY_RESTARTED_THREAD = "alreadyRestarted";
 const WONT_RESTART_THREAD = "wontRestart";
@@ -15,6 +17,8 @@ const DEFAULT_THREAD = 'default';
 const NOT_FINISHED_THREAD = 'notFinished';
 const NO_GAMES_THREAD = 'noGames';
 const COMPLETE_ACTION = 'complete';
+
+const RESTARTED_MESSAGE = `Sit back and relax until it's your turn. ${cancelConversation.CANCEL_PHRASE} ${statusConversation.STATUS_PHRASE}`
 
 module.exports = {
     RESTART_CONVERSATION: 'restart',
@@ -27,7 +31,7 @@ module.exports = {
         module.exports.addRestartQuestion(convo);
 
         convo.addMessage({
-            text: `Someone else already restarted your game! Just sit back and relax until it's your turn.`, 
+            text: `Someone else already restarted your game! ${RESTARTED_MESSAGE}`, 
             action: COMPLETE_ACTION
         }, ALREADY_RESTARTED_THREAD);
         
@@ -101,7 +105,7 @@ module.exports = {
             if (Array.isArray(previousTurns) && previousTurns.length > 0 && Array.isArray(newTurns) && newTurns.length > 0) {
                 for (let turn of previousTurns) {
                     await utils.bot.startConversationWithUser(turn.user.phoneNumber);
-                    await utils.bot.say("Your game was restarted! Sit back and relax until it's your turn.")
+                    await utils.bot.say("Your game was restarted! ${RESTARTED_MESSAGE}")
                 }
                 turnConversation.takeFirstTurn(newTurns[0].gameId);
             } else {
