@@ -34,7 +34,6 @@ module.exports = {
             action: COMPLETE_ACTION
         }, ALREADY_CANCELED_THREAD);
         
-        console.log(setupConversation, setupConversation.INITIATE_GAME_KEYWORD)
         convo.addMessage({
             text: `You're not in any active games that you can finish. Text me the word "start" to begin a new game!`, // TODO: Centralize
             action: COMPLETE_ACTION

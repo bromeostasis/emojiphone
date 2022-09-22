@@ -4,6 +4,7 @@ const turnUtils = require('./utils/turn_utils');
 const turnConversation = require('./conversations/turn');
 const restartConversation = require('./conversations/restart');
 const cancelConversation = require('./conversations/cancel');
+const statusConversation = require('./conversations/status');
 const utils = require('./utils/utils');
 const models = require('./models');
 const User = require('./models/user');
@@ -15,7 +16,6 @@ const acceptablePlatforms = [android, ios];
 module.exports = {
     setup: async function() {
         await utils.createBot();
-
         utils.controller.webserver.get('/mmsLink/:platform/:gameId', async(req, res) => {
             let platform = req.params.platform.toLowerCase();
             if (acceptablePlatforms.indexOf(platform) == -1) {
@@ -59,5 +59,14 @@ module.exports = {
                 console.log(e);
             }
         });
+
+        utils.controller.hears([statusConversation.STATUS_KEYWORD], 'message', async (bot, message) => {
+            try {
+                const statusMessage = await statusConversation.getStatusMessage(bot, message)
+                await bot.say(statusMessage)
+            } catch(e) {
+                console.log(e);
+            }
+        });        
     }
 }
