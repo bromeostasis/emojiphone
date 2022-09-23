@@ -1,6 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
+const { KEYWORDS, PHRASES } = require('../utils/constants')
 const models = require('../models');
 const turnUtils = require('../utils/turn_utils');
 const setupUtils = require('../utils/setup_utils');
@@ -18,7 +19,7 @@ const NOT_FINISHED_THREAD = 'notFinished';
 const NO_GAMES_THREAD = 'noGames';
 const COMPLETE_ACTION = 'complete';
 
-const RESTARTED_MESSAGE = `Sit back and relax until it's your turn. ${cancelConversation.CANCEL_PHRASE} ${statusConversation.STATUS_PHRASE}`
+const RESTARTED_MESSAGE = `Sit back and relax until it's your turn. ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`
 
 module.exports = {
     RESTART_CONVERSATION: 'restart',
@@ -46,7 +47,7 @@ module.exports = {
         }, NOT_FINISHED_THREAD);
         
         convo.addMessage({
-            text: `You haven't played any games yet. Text me the word "${setupConversation.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
+            text: `You haven't played any games yet. Text me the word "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
             action: COMPLETE_ACTION
         }, NO_GAMES_THREAD);
         

@@ -1,6 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
+const { MESSAGES } = require('../utils/constants')
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
@@ -14,8 +15,6 @@ const COMPLETE_ACTION = 'complete';
 
 module.exports = {
     CANCEL_CONVERSATION: 'cancel',
-    CANCEL_KEYWORD: 'finish',
-    CANCEL_PHRASE: `Text "finish" to finish your game early.`,
     setupCancelConversation: async () => {
         let convo = new BotkitConversation(module.exports.CANCEL_CONVERSATION, utils.controller);
         convo.before(DEFAULT_THREAD, async(convo, bot) => {
@@ -35,7 +34,7 @@ module.exports = {
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: `You are not currently playing in a game! Text me the word "start" to begin a new game!`, // TODO: Centralize
+            text: MESSAGES.NOT_IN_GAME_MESSAGE,
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         

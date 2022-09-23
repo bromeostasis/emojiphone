@@ -7,6 +7,7 @@ const cancelConversation = require('./conversations/cancel');
 const statusConversation = require('./conversations/status');
 
 const utils = require('./utils/utils');
+const { KEYWORDS } = require('./utils/constants')
 const models = require('./models');
 const User = require('./models/user');
 const mmsUtils = require('./utils/mms_utils');
@@ -38,7 +39,7 @@ module.exports = {
         await restartConversation.setupRestartConversation();
         await cancelConversation.setupCancelConversation();
 
-        utils.controller.hears([setupConversation.INITIATE_GAME_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.INITIATE_GAME_KEYWORD], 'message', async (bot, message) => {
             try {
                 await bot.beginDialog(setupConversation.SETUP_CONVERSATION);
             } catch(e) {
@@ -54,7 +55,7 @@ module.exports = {
             }
         });
 
-        utils.controller.hears([cancelConversation.CANCEL_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.CANCEL_KEYWORD], 'message', async (bot, message) => {
             try {
                 await bot.beginDialog(cancelConversation.CANCEL_CONVERSATION);
             } catch(e) {
@@ -62,7 +63,7 @@ module.exports = {
             }
         });
 
-        utils.controller.hears([statusConversation.STATUS_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.STATUS_KEYWORD], 'message', async (bot, message) => {
             try {
                 const statusMessage = await statusConversation.getStatusMessage(bot, message)
                 await bot.say(statusMessage)

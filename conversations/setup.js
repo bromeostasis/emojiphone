@@ -1,16 +1,14 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
+const { KEYWORDS, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const setupUtils = require('../utils/setup_utils');
-const turnConversation = require('./turn');
 const cancelConversation = require('./cancel');
 const statusConversation = require('./status');
 const models = require('../models');
 
 const V_CARD_TYPE = 'text/x-vcard';
-const DONE_ADDING_CONTACTS_KEYWORD = 'done';
-const QUIT_SETUP_KEYWORD = 'exit';
 const START_GAME_THREAD = 'startGame';
 const NOT_READY_YET_THREAD = 'notReadyYet';
 const QUIT_GAME_THREAD = 'quitGame';
@@ -37,7 +35,7 @@ const ALREADY_ACTIVE_GAME_ERROR = ALREADY_ACTIVE_ERROR + `
 Please confirm no users are in an existing game and set up your game again.`
 
 let quitGameResponse = {
-    pattern: QUIT_SETUP_KEYWORD,
+    pattern: KEYWORDS.QUIT_SETUP_KEYWORD,
     handler: async function(response, convo) {
         await convo.gotoThread(QUIT_GAME_THREAD);
     },
@@ -45,7 +43,6 @@ let quitGameResponse = {
 
 module.exports = {
     SETUP_CONVERSATION: 'setupConversation',
-    INITIATE_GAME_KEYWORD: "start",
     /**
      * Create the converstaion thread where a user can start the game.
      */
@@ -76,7 +73,7 @@ module.exports = {
         }, EXISTING_USER_THREAD);
 
         convo.after(async(results, bot) => {
-            module.exports.startGameIfReady(results);
+            setupUtils.startGameIfReady(results);
         })
 
         await utils.controller.addDialog(convo);
@@ -103,7 +100,7 @@ module.exports = {
     addCreatorAsUserQuestion: (convo) => {
         convo.addQuestion(`Since this is your first time playing, we'll need a way to identify you. What's your name (you may enter first and last)?
 
-Text "${QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
+Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
             quitGameResponse,
             {
                 default: true,
@@ -139,9 +136,9 @@ Text "${QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
     addContactsQuestion: async (convo) => {
         convo.addQuestion(`Time to set up your game! Text me at least {{vars.contactsLeft}} more contacts to be able to start your game.
 
-Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
+Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${KEYWORDS.QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
             {
-                pattern: DONE_ADDING_CONTACTS_KEYWORD,
+                pattern: KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD,
                 handler: async (response, inConvo, bot, full_message) => {
                     let users = inConvo.vars.gameUsers;
                     if (setupUtils.isGameReady(users)) {
@@ -155,7 +152,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
             {
                 default: true,
                 handler: async (response, inConvo, bot, full_message) => {
-                    if (full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
+                    if (full_message && full_message.MediaContentType0 && full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
                         try {
                             let user = await utils.vCardMessageToUser(full_message);
                             let validatedNumber = phone(user.phoneNumber, "USA");
@@ -200,7 +197,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
         }, ADDED_PHONE_NUMBER_THREAD);
 
         convo.addMessage({
-            text: `Sorry, I couldn't understand you. Please send a contact, or say "${DONE_ADDING_CONTACTS_KEYWORD}" or "${QUIT_SETUP_KEYWORD}".`,
+            text: `Sorry, I couldn't understand you. Please send a contact, or say "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" or "${KEYWORDS.QUIT_SETUP_KEYWORD}".`,
             action: ADD_CONTACTS_THREAD
         }, INVALID_INPUT_THREAD);
 
@@ -225,11 +222,11 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
         }, INVALID_NUMBER_THREAD);
         
         convo.addMessage({
-            text: `Ok, you will not start the game. Text "${module.exports.INITIATE_GAME_KEYWORD}" to begin a new game!`,
+            text: `Ok, you will not start the game. ${PHRASES.START_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
         convo.addMessage({
-            text: `Ok, we will begin the game! ${cancelConversation.CANCEL_PHRASE} ${statusConversation.STATUS_PHRASE}`,
+            text: `Ok, we will begin the game! ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, START_GAME_THREAD);
 
@@ -237,39 +234,5 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
             text: `Oops! You don't have enough other players. Please add at least {{vars.contactsLeft}} more contacts.`,
             action: ADD_CONTACTS_THREAD,
         }, NOT_READY_YET_THREAD);
-    },
-    startGameIfReady: async (results) => {
-        if (results.gameReady && results.gameReady == true) {
-            try {
-                let currentUser = results.currentUser;
-                let phoneNumber = results.channel;
-                if (!currentUser) {
-                    currentUser = await utils.getUserByPhoneNumber(phoneNumber);
-                }
-
-                let turns = await setupUtils.setupGame(results.gameUsers, [currentUser]);
-                if (Array.isArray(turns) && turns.length > 0) {
-                    turnConversation.takeFirstTurn(turns[0].gameId);
-                } else {
-                    if (turns === setupUtils.INACTIVE_PLAYER_ERROR_CODE) {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
-                    } else {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-                module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
-            }
-        }
-    },
-    sendGameFailedToSetupText: async (phoneNumber, message) => {
-        try {
-            await utils.bot.startConversationWithUser(phoneNumber);
-            await utils.bot.say(message)
-        } catch (err) {
-            console.log('Error sending message', err);
-        }
-        
     },
 }

@@ -4,7 +4,7 @@ const { Op } = require('sequelize');
 const MessageType = require('../types/message_type');
 const models = require('../models');
 
-// TODO: async/awaitify this page
+const turnConversation = require('../conversations/turn')
 
 module.exports = {
     MINIMUM_PLAYER_COUNT: 2, // TODO: move to env
@@ -140,5 +140,39 @@ module.exports = {
 
     isUserInActiveGame: async (user)  => {
         return await module.exports.areUsersInActiveGame([user])
+    },
+    startGameIfReady: async (convoResults) => {
+        if (convoResults.gameReady && convoResults.gameReady == true) {
+            try {
+                let currentUser = convoResults.currentUser;
+                let phoneNumber = convoResults.channel;
+                if (!currentUser) {
+                    currentUser = await utils.getUserByPhoneNumber(phoneNumber);
+                }
+
+                let turns = await module.exports.setupGame(convoResults.gameUsers, [currentUser]);
+                if (Array.isArray(turns) && turns.length > 0) {
+                    turnConversation.takeFirstTurn(turns[0].gameId);
+                } else {
+                    if (turns === module.exports.INACTIVE_PLAYER_ERROR_CODE) {
+                        return module.exports.sendGameFailedToSetupText(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
+                    } else {
+                        return module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
+                    }
+                }
+            } catch (err) {
+                console.log(err);
+                module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
+            }
+        }
+    },
+    sendGameFailedToSetupText: async (phoneNumber, message) => {
+        try {
+            await utils.bot.startConversationWithUser(phoneNumber);
+            await utils.bot.say(message)
+        } catch (err) {
+            console.log('Error sending message', err);
+        }
+        
     },
 }
