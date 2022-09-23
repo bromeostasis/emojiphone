@@ -74,7 +74,7 @@ module.exports = {
         }, EXISTING_USER_THREAD);
 
         convo.after(async(results, bot) => {
-            module.exports.startGameIfReady(results);
+            setupUtils.startGameIfReady(results);
         })
 
         await utils.controller.addDialog(convo);
@@ -235,39 +235,5 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
             text: `Oops! You don't have enough other players. Please add at least {{vars.contactsLeft}} more contacts.`,
             action: ADD_CONTACTS_THREAD,
         }, NOT_READY_YET_THREAD);
-    },
-    startGameIfReady: async (results) => {
-        if (results.gameReady && results.gameReady == true) {
-            try {
-                let currentUser = results.currentUser;
-                let phoneNumber = results.channel;
-                if (!currentUser) {
-                    currentUser = await utils.getUserByPhoneNumber(phoneNumber);
-                }
-
-                let turns = await setupUtils.setupGame(results.gameUsers, [currentUser]);
-                if (Array.isArray(turns) && turns.length > 0) {
-                    turnConversation.takeFirstTurn(turns[0].gameId);
-                } else {
-                    if (turns === setupUtils.INACTIVE_PLAYER_ERROR_CODE) {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
-                    } else {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
-                    }
-                }
-            } catch (err) {
-                console.log(err);
-                module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
-            }
-        }
-    },
-    sendGameFailedToSetupText: async (phoneNumber, message) => {
-        try {
-            await utils.bot.startConversationWithUser(phoneNumber);
-            await utils.bot.say(message)
-        } catch (err) {
-            console.log('Error sending message', err);
-        }
-        
     },
 }

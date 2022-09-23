@@ -18,8 +18,6 @@ const acceptablePlatforms = [android, ios];
 
 module.exports = {
     setup: async function() {
-        console.log(KEYWORDS.INITIATE_GAME_KEYWORD, PHRASES.START_PHRASE)
-
         await utils.createBot();
         utils.controller.webserver.get('/mmsLink/:platform/:gameId', async(req, res) => {
             let platform = req.params.platform.toLowerCase();
