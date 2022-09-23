@@ -5,6 +5,7 @@ const { MESSAGES } = require('../utils/constants')
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
+const models = require('../models');
 
 const DEFAULT_THREAD = 'default'
 const WONT_CANCEL_THREAD = 'wontCancel'
@@ -33,7 +34,7 @@ module.exports = {
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: MESSAGES.NOT_IN_GAMES_MESSAGE,
+            text: MESSAGES.NOT_IN_GAME_MESSAGE,
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         

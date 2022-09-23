@@ -4,7 +4,6 @@ const { BotkitConversation } = require('botkit');
 const { KEYWORDS, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const setupUtils = require('../utils/setup_utils');
-const turnConversation = require('./turn');
 const cancelConversation = require('./cancel');
 const statusConversation = require('./status');
 const models = require('../models');
@@ -153,7 +152,7 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
             {
                 default: true,
                 handler: async (response, inConvo, bot, full_message) => {
-                    if (full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
+                    if (full_message && full_message.MediaContentType0 && full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
                         try {
                             let user = await utils.vCardMessageToUser(full_message);
                             let validatedNumber = phone(user.phoneNumber, "USA");
