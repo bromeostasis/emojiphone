@@ -4,6 +4,7 @@ const { BotkitConversation } = require('botkit');
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
+const models = require('../models');
 
 const DEFAULT_THREAD = 'default'
 const WONT_CANCEL_THREAD = 'wontCancel'
