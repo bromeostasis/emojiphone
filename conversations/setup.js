@@ -230,7 +230,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
         convo.addMessage({
-            text: `Ok, we will begin the game! ${cancelConversation.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`,
+            text: `Ok, we will begin the game! ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, START_GAME_THREAD);
 

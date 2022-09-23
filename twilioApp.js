@@ -57,7 +57,7 @@ module.exports = {
             }
         });
 
-        utils.controller.hears([cancelConversation.CANCEL_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.CANCEL_KEYWORD], 'message', async (bot, message) => {
             try {
                 await bot.beginDialog(cancelConversation.CANCEL_CONVERSATION);
             } catch(e) {

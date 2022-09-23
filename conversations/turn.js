@@ -37,7 +37,7 @@ module.exports = {
             action: COMPLETE_ACTION
         }, TURN_ERROR_THREAD)
 
-        convo.addMessage({text: `Thanks, your turn has been recorded! You will be notified when the game completes. ${cancelConversation.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`, action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
+        convo.addMessage({text: `Thanks, your turn has been recorded! You will be notified when the game completes. ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`, action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
 
         module.exports.addTurnQuestion(convo);
         convo.after(async (results, bot) => {

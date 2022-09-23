@@ -19,7 +19,7 @@ const NOT_FINISHED_THREAD = 'notFinished';
 const NO_GAMES_THREAD = 'noGames';
 const COMPLETE_ACTION = 'complete';
 
-const RESTARTED_MESSAGE = `Sit back and relax until it's your turn. ${cancelConversation.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`
+const RESTARTED_MESSAGE = `Sit back and relax until it's your turn. ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`
 
 module.exports = {
     RESTART_CONVERSATION: 'restart',

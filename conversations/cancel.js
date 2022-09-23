@@ -4,7 +4,6 @@ const { BotkitConversation } = require('botkit');
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
-const models = require('../models');
 
 const DEFAULT_THREAD = 'default'
 const WONT_CANCEL_THREAD = 'wontCancel'
@@ -14,8 +13,6 @@ const COMPLETE_ACTION = 'complete';
 
 module.exports = {
     CANCEL_CONVERSATION: 'cancel',
-    CANCEL_KEYWORD: 'finish',
-    CANCEL_PHRASE: `Text "finish" to finish your game early.`,
     setupCancelConversation: async () => {
         let convo = new BotkitConversation(module.exports.CANCEL_CONVERSATION, utils.controller);
         convo.before(DEFAULT_THREAD, async(convo, bot) => {
