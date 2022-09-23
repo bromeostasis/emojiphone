@@ -9,12 +9,12 @@ const KEYWORDS = {
 
 const PHRASES = {
     CANCEL_PHRASE: `Text "${KEYWORDS.CANCEL_KEYWORD}" to finish your game early.`,
-	START_PHRASE: `TEXT ME "${KEYWORDS.INITIATE_GAME_KEYWORD}" TO START`,
+	START_PHRASE: ` Text "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin a new game!`,
     STATUS_PHRASE: `Text "${KEYWORDS.STATUS_KEYWORD}" for a status update on your game.`,
 }
 
 const MESSAGES = {
-	NOT_IN_GAME_MESSAGE: `You are not currently playing in a game! Text me the word "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin a new game!`
+	NOT_IN_GAME_MESSAGE: `You are not currently playing in a game! ${PHRASES.START_PHRASE}`
 }
 
 module.exports = {

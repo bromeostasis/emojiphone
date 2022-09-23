@@ -1,3 +1,4 @@
+const { PHRASES } = require('../utils/constants')
 const models = require('../models');
 const utils = require('../utils/utils');
 
@@ -58,6 +59,6 @@ const sendCancelledGameMessages = async (turns, cancellingUser) => {
         if (user.id !== cancellingUser.id) {
             cancelledByPhrase = ` by ${cancellingUser.firstName}`
         }
-        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! Feel free to start a new game by texting me the word "start".`) //TODO: Centralize
+        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! ${PHRASES.START_PHRASE}`)
     }
 }

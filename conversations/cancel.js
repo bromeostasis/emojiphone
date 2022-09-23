@@ -1,6 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
+const { MESSAGES } = require('../utils/constants')
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
@@ -32,7 +33,7 @@ module.exports = {
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: `You are not currently playing in a game! Text me the word "start" to begin a new game!`, // TODO: Centralize
+            text: MESSAGES.NOT_IN_GAMES_MESSAGE,
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         
