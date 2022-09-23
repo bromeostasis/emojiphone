@@ -18,7 +18,7 @@ const acceptablePlatforms = [android, ios];
 
 module.exports = {
     setup: async function() {
-        console.log(KEYWORDS.START_KEYWORD, PHRASES.START_PHRASE)
+        console.log(KEYWORDS.INITIATE_GAME_KEYWORD, PHRASES.START_PHRASE)
 
         await utils.createBot();
         utils.controller.webserver.get('/mmsLink/:platform/:gameId', async(req, res) => {
@@ -41,7 +41,7 @@ module.exports = {
         await restartConversation.setupRestartConversation();
         await cancelConversation.setupCancelConversation();
 
-        utils.controller.hears([setupConversation.INITIATE_GAME_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.INITIATE_GAME_KEYWORD], 'message', async (bot, message) => {
             try {
                 await bot.beginDialog(setupConversation.SETUP_CONVERSATION);
             } catch(e) {

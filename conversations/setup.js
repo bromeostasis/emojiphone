@@ -1,7 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
-const { PHRASES } = require('../utils/constants')
+const { KEYWORDS, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const setupUtils = require('../utils/setup_utils');
 const turnConversation = require('./turn');
@@ -10,8 +10,6 @@ const statusConversation = require('./status');
 const models = require('../models');
 
 const V_CARD_TYPE = 'text/x-vcard';
-const DONE_ADDING_CONTACTS_KEYWORD = 'done';
-const QUIT_SETUP_KEYWORD = 'exit';
 const START_GAME_THREAD = 'startGame';
 const NOT_READY_YET_THREAD = 'notReadyYet';
 const QUIT_GAME_THREAD = 'quitGame';
@@ -38,7 +36,7 @@ const ALREADY_ACTIVE_GAME_ERROR = ALREADY_ACTIVE_ERROR + `
 Please confirm no users are in an existing game and set up your game again.`
 
 let quitGameResponse = {
-    pattern: QUIT_SETUP_KEYWORD,
+    pattern: KEYWORDS.QUIT_SETUP_KEYWORD,
     handler: async function(response, convo) {
         await convo.gotoThread(QUIT_GAME_THREAD);
     },
@@ -46,7 +44,6 @@ let quitGameResponse = {
 
 module.exports = {
     SETUP_CONVERSATION: 'setupConversation',
-    INITIATE_GAME_KEYWORD: "start",
     /**
      * Create the converstaion thread where a user can start the game.
      */
@@ -104,7 +101,7 @@ module.exports = {
     addCreatorAsUserQuestion: (convo) => {
         convo.addQuestion(`Since this is your first time playing, we'll need a way to identify you. What's your name (you may enter first and last)?
 
-Text "${QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
+Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
             quitGameResponse,
             {
                 default: true,
@@ -140,9 +137,9 @@ Text "${QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
     addContactsQuestion: async (convo) => {
         convo.addQuestion(`Time to set up your game! Text me at least {{vars.contactsLeft}} more contacts to be able to start your game.
 
-Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
+Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${KEYWORDS.QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
             {
-                pattern: DONE_ADDING_CONTACTS_KEYWORD,
+                pattern: KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD,
                 handler: async (response, inConvo, bot, full_message) => {
                     let users = inConvo.vars.gameUsers;
                     if (setupUtils.isGameReady(users)) {
@@ -201,7 +198,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
         }, ADDED_PHONE_NUMBER_THREAD);
 
         convo.addMessage({
-            text: `Sorry, I couldn't understand you. Please send a contact, or say "${DONE_ADDING_CONTACTS_KEYWORD}" or "${QUIT_SETUP_KEYWORD}".`,
+            text: `Sorry, I couldn't understand you. Please send a contact, or say "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" or "${KEYWORDS.QUIT_SETUP_KEYWORD}".`,
             action: ADD_CONTACTS_THREAD
         }, INVALID_INPUT_THREAD);
 
@@ -226,7 +223,7 @@ Text "${DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${QUI
         }, INVALID_NUMBER_THREAD);
         
         convo.addMessage({
-            text: `Ok, you will not start the game. Text "${module.exports.INITIATE_GAME_KEYWORD}" to begin a new game!`,
+            text: `Ok, you will not start the game. Text "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin a new game!`,
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
         convo.addMessage({

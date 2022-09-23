@@ -1,7 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
-const { PHRASES } = require('../utils/constants')
+const { KEYWORDS, PHRASES } = require('../utils/constants')
 const models = require('../models');
 const turnUtils = require('../utils/turn_utils');
 const setupUtils = require('../utils/setup_utils');
@@ -47,7 +47,7 @@ module.exports = {
         }, NOT_FINISHED_THREAD);
         
         convo.addMessage({
-            text: `You haven't played any games yet. Text me the word "${setupConversation.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
+            text: `You haven't played any games yet. Text me the word "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
             action: COMPLETE_ACTION
         }, NO_GAMES_THREAD);
         
