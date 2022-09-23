@@ -7,6 +7,7 @@ const cancelConversation = require('./conversations/cancel');
 const statusConversation = require('./conversations/status');
 
 const utils = require('./utils/utils');
+const { KEYWORDS, PHRASES } = require('./utils/constants')
 const models = require('./models');
 const User = require('./models/user');
 const mmsUtils = require('./utils/mms_utils');
@@ -17,6 +18,8 @@ const acceptablePlatforms = [android, ios];
 
 module.exports = {
     setup: async function() {
+        console.log(KEYWORDS.START_KEYWORD, PHRASES.START_PHRASE)
+
         await utils.createBot();
         utils.controller.webserver.get('/mmsLink/:platform/:gameId', async(req, res) => {
             let platform = req.params.platform.toLowerCase();
@@ -62,7 +65,7 @@ module.exports = {
             }
         });
 
-        utils.controller.hears([statusConversation.STATUS_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.STATUS_KEYWORD], 'message', async (bot, message) => {
             try {
                 const statusMessage = await statusConversation.getStatusMessage(bot, message)
                 await bot.say(statusMessage)
