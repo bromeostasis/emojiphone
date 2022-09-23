@@ -7,7 +7,7 @@ const cancelConversation = require('./conversations/cancel');
 const statusConversation = require('./conversations/status');
 
 const utils = require('./utils/utils');
-const { KEYWORDS, PHRASES } = require('./utils/constants')
+const { KEYWORDS } = require('./utils/constants')
 const models = require('./models');
 const User = require('./models/user');
 const mmsUtils = require('./utils/mms_utils');
