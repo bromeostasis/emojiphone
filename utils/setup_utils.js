@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 const MessageType = require('../types/message_type');
 const models = require('../models');
 
+const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn')
 
 module.exports = {
@@ -142,15 +143,14 @@ module.exports = {
         return await module.exports.areUsersInActiveGame([user])
     },
     startGameIfReady: async (convoResults) => {
-        if (convoResults.gameReady && convoResults.gameReady == true) {
+        const { currentUser, channel: phoneNumber, gameReady, gameUsers } = convoResults
+        if (gameReady) {
             try {
-                let currentUser = convoResults.currentUser;
-                let phoneNumber = convoResults.channel;
                 if (!currentUser) {
                     currentUser = await utils.getUserByPhoneNumber(phoneNumber);
                 }
-
-                let turns = await module.exports.setupGame(convoResults.gameUsers, [currentUser]);
+                await module.exports.sendOnboardingTexts(gameUsers, currentUser)
+                let turns = await module.exports.setupGame(gameUsers, [currentUser]);
                 if (Array.isArray(turns) && turns.length > 0) {
                     turnConversation.takeFirstTurn(turns[0].gameId);
                 } else {
@@ -165,6 +165,16 @@ module.exports = {
                 module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
             }
         }
+    },
+    sendOnboardingTexts: async (users, initiatingUser) => {
+        users.filter((user) => user.needsOnboarding).forEach(async (user) => {
+            const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of Emojiphone! You will receive another text from this phone number when it's your turn!
+
+Learn more here: TODO`
+            await utils.bot.startConversationWithUser(user.phoneNumber);
+            await utils.bot.say(WELCOME_MESSAGE)
+            await models.user.update({needsOnboarding: false}, {where: {id: user.id}})
+        })
     },
     sendGameFailedToSetupText: async (phoneNumber, message) => {
         try {
