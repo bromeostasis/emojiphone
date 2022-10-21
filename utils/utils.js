@@ -63,14 +63,17 @@ module.exports = {
     /**
      * Create a new user in the database
      * @param  {String} nameString String containing at least a first name, and potentially a last name
-     * @param  {String phoneNumber} phoneNumber User's phone number.
+     * @param  {String} phoneNumber User's phone number.
+     * @param  {Boolean needsOnboarding} Whether the user needs onboarding. 
+       Defaults to true unless the user has actively chosen to engage with the platform (setting up a game for the first time)
 
     */
-    addUser: async (nameString, phoneNumber) => {
+    addUser: async (nameString, phoneNumber, needsOnboarding=true) => {
         let nameStrings = nameString.split(' ');
         let user = {
             firstName: nameStrings[0],
-            phoneNumber: phoneNumber            
+            phoneNumber: phoneNumber,
+            needsOnboarding,
         }
         if (nameStrings.length > 1) {
             user["lastName"] = nameString.substring(nameString.indexOf(' ') + 1);
