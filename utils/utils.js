@@ -1,6 +1,6 @@
 const { Botkit } = require('botkit');
 const { TwilioAdapter } = require('botbuilder-adapter-twilio-sms');
-const { PostgresStorage } = require('botbuilder-storage-postgres');
+const { PostgresStorage } = require('@bromeostasis/botbuilder-storage-postgres');
 const vCard = require('vcard');
 
 
