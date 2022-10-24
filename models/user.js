@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       unique: true,
     },
+    needsOnboarding: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true,
+    }
   }, {});
   user.associate = function(models) {
     // associations can be defined here

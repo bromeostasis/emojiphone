@@ -108,7 +108,7 @@ Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
                     if (NAME_PATTERN.test(full_message.Body)) {
                         try {
                             let phoneNumber = phone(inConvo.vars.channel)[0];
-                            await utils.addUser(full_message.Body, phoneNumber);
+                            await utils.addUser(full_message.Body, phoneNumber, false);
                             await inConvo.gotoThread(ADDED_USER_THREAD);
                         } catch (err) {
                             console.log(err);
