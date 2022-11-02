@@ -17,7 +17,6 @@ function App() {
   }, [])
 
   useEffect(() => {
-    // const messageContent = 'blerp'
     callBackendAPI()
   }, [callBackendAPI])
 
@@ -34,7 +33,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn ReactZ
+          Learn React and post a cool message:
 
           {message}
         </a>
