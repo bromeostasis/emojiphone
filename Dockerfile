@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM node:16.18-bullseye
 
 # Create app directory
 WORKDIR /usr/src/app
