@@ -1,5 +1,4 @@
 var path = require('path');
-var express = require('express');
 
 const setupConversation = require('./conversations/setup');
 const setupUtils = require('./utils/setup_utils');
