@@ -1,4 +1,4 @@
-FROM node:carbon
+FROM node:16.18-bullseye
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,4 +16,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm", "start" ]
+# CMD [ "npm", "start" ]
+CMD ./scripts/start.sh
