@@ -5,6 +5,7 @@ const { Op } = require('sequelize');
 const emojiRegex = require('emoji-regex');
 const emojiReg = emojiRegex();
 
+const { KEYWORDS } = require('../utils/constants')
 const MessageType = require('../types/message_type');
 const models = require('../models');
 const utils = require('../utils/utils');
@@ -13,7 +14,6 @@ const textReg = /[a-zA-Z0-9\.\!\+\$\#\@\_\&\-\+\(\)\/\*\"\'\:\;\!\?\~\`\|\â€¢\âˆ
 const FIRST_TURN_PROMPT = "Welcome to Emojiphone! You are the first player, so all you need to do is respond to this text with a phrase or sentence that is easy to describe with emojis!";
 
 module.exports = {
-    RESTART_KEYWORD: 'again',
     isValidResponse: (response, messageType) => {
         response = response.replace(/\s+/g, '');
         if (messageType == MessageType.text) {
@@ -98,7 +98,7 @@ If you'd like to start a group message to discuss your game, just click one of t
 Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
 iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
 
-If you'd like to restart your latest game, simply send a message to this number with the word "${module.exports.RESTART_KEYWORD}".`
+If you'd like to restart your latest game, simply send a message to this number with the word "${KEYWORDS.RESTART_KEYWORD}".`
 
         }
 
