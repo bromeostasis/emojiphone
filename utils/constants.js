@@ -19,6 +19,5 @@ const PHRASES = {
 
 module.exports = {
 	KEYWORDS,
-	MESSAGES,
 	PHRASES
 }
