@@ -1,7 +1,7 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
-const { MESSAGES } = require('../utils/constants')
+const { KEYWORDS, PHRASES } = require('../utils/constants')
 const gameUtils = require('../utils/game_utils');
 const utils = require('../utils/utils');
 const cancelUtils = require('../utils/cancel_utils');
@@ -24,17 +24,17 @@ module.exports = {
         module.exports.addCancelQuestion(convo);
         
         convo.addMessage({
-            text: `Ok, your game won't be finished.`, 
+            text: `Ok, your game won't be ${KEYWORDS.CANCEL_KEYWORD}ed.`, 
             action: COMPLETE_ACTION
         }, WONT_CANCEL_THREAD);
 
         convo.addMessage({
-            text: 'Your game has already been finished, no need to do anything else!', 
+            text: 'Your game has already been ${KEYWORDS.CANCEL_KEYWORD}ed, no need to do anything else!', 
             action: COMPLETE_ACTION
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: MESSAGES.NOT_IN_GAME_MESSAGE,
+            text: `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_PHRASE} ${PHRASES.UNSUBSCRIBE_PHRASE}`,
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         
@@ -59,7 +59,7 @@ module.exports = {
         }
     },
     addCancelQuestion: (convo) => {
-        let cancelPrompt = `You're about to finish your game with the following people: {{vars.firstNames}}. Are you sure you want to do this? Respond with "Yes" to confirm cancellation or "No" to allow the game to continue.`
+        let cancelPrompt = `You're about to ${KEYWORDS.CANCEL_KEYWORD} your game with the following people: {{vars.firstNames}}. Are you sure you want to do this? Respond with "Yes" to confirm or "No" to allow the game to continue.`
         convo.addQuestion(cancelPrompt, 
             [{
                 pattern: 'yes',
