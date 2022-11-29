@@ -1,6 +1,6 @@
 const phone = require("phone");
 
-const { MESSAGES } = require('../utils/constants')
+const { PHRASES } = require('../utils/constants')
 const gameUtils = require('../utils/game_utils');
 const turnUtils = require('../utils/turn_utils');
 
@@ -11,7 +11,7 @@ module.exports = {
     	const currentGame = await gameUtils.getLatestGameByPhoneNumber(phoneNumber)
 
     	if (!currentGame) {
-    		return MESSAGES.NOT_IN_GAME_MESSAGE
+    		return `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_PHRASE}`
     	}
 
     	const currentTurn = await turnUtils.getCurrentTurn(currentGame.id)

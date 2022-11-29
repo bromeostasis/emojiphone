@@ -40,7 +40,7 @@ module.exports = {
             }
         });
 
-        utils.controller.hears([turnUtils.RESTART_KEYWORD], 'message', async (bot, message) => {
+        utils.controller.hears([KEYWORDS.RESTART_KEYWORD], 'message', async (bot, message) => {
             try {
                 await bot.beginDialog(restartConversation.RESTART_CONVERSATION);
             } catch(e) {
