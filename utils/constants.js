@@ -2,9 +2,9 @@
 const KEYWORDS = {
     CANCEL_KEYWORD: 'cancel',
 	DONE_ADDING_CONTACTS_KEYWORD: 'done',
-	INITIATE_GAME_KEYWORD: 'start',	
-	QUIT_SETUP_KEYWORD: 'exit',
-    RESTART_KEYWORD: 'again',
+	INITIATE_GAME_KEYWORD: 'new',	
+	QUIT_SETUP_KEYWORD: 'quit',
+    RESTART_KEYWORD: 'restart',
     STATUS_KEYWORD: 'status',
     UNSUBSCRIBE_KEWYORD: 'STOP',
 }
