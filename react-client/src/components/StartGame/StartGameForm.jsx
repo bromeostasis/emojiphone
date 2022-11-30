@@ -11,7 +11,7 @@ function StartGameForm() {
 	const { fields, append, remove } = useFieldArray({
 		control,
 		rules: {
-			minLength: 4 // TODO: Constant
+			minLength: 1 // TODO: Constant
 		},
 		name: "players"
 	});
@@ -39,7 +39,7 @@ function StartGameForm() {
 			<form onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 			  <ul>
 			  	<li>
-			  		<PlayerInput register={register} namePrefix='user' placeholderPrefix='YOUR ' />
+			  		<PlayerInput register={register} placeholderPrefix='YOUR ' />
 			  	</li>
 			    {fields.map((item, index) => (
 			      <li key={item.id}>
@@ -66,12 +66,12 @@ function StartGameForm() {
 }
 
 function PlayerInput(props) {
-	const { register, namePrefix, placeholderPrefix = '' } = props
+	const { register, namePrefix= '', placeholderPrefix = '' } = props
 	return (
 		<>
-		    <input {...register(`${namePrefix}FirstName`, {required: true})} placeholder={`${placeholderPrefix}First Name`} />
-		    <input {...register(`${namePrefix}LastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
-		    <input {...register(`${namePrefix}PhoneNumber`, {
+		    <input {...register(`${namePrefix}firstName`, {required: true})} placeholder={`${placeholderPrefix}First Name`} />
+		    <input {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
+		    <input {...register(`${namePrefix}phoneNumber`, {
 		    	validate: v => phone(v, "USA").length !== 0
 		    })} placeholder={`${placeholderPrefix}Phone Number`}/>
 		</>
