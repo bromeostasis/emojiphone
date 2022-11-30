@@ -1,6 +1,8 @@
+import { useCallback, useEffect, useState } from 'react'
+
+import StartGame from './components/StartGame'
 import logo from './logo.svg';
 import './App.css';
-import { useCallback, useEffect, useState } from 'react'
 
 function App() {
   const [message, setMessage] = useState('')
@@ -37,6 +39,7 @@ function App() {
 
           {message}
         </a>
+        <StartGame />
       </header>
     </div>
   );
