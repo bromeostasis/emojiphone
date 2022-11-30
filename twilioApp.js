@@ -8,6 +8,7 @@ const restartConversation = require('./conversations/restart');
 const cancelConversation = require('./conversations/cancel');
 const statusConversation = require('./conversations/status');
 
+const services = require('./services/services')
 const utils = require('./utils/utils');
 const { KEYWORDS } = require('./utils/constants')
 const models = require('./models');
@@ -79,6 +80,13 @@ module.exports = {
 
         utils.controller.webserver.get('/test', async(req, res) => {
             res.status(200).send({express: 'test received'})
+        })
+
+        utils.controller.webserver.post('/startGame', async(req, res) => {
+            console.log(req.body)
+            const { status, response } = await services.startGame(req.body)
+            console.log(status, response)
+            res.status(status).send(response)
         })
 
         utils.controller.publicFolder('/', path.join(__dirname, "react-client/build/"));

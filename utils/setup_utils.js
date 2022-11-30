@@ -185,4 +185,11 @@ Learn more here: TODO`
         }
         
     },
+    createUser: async (user) => {
+        const returnedUsers = await models.user.upsert(user, {returning: true}).catch(err => {
+            console.log(err);
+            throw err;
+        })
+        return returnedUsers[0] // TODO: Validation?
+    }
 }

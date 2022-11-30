@@ -10,12 +10,33 @@ function StartGameForm() {
 	});
 	const { fields, append, remove } = useFieldArray({
 		control,
+		rules: {
+			minLength: 4 // TODO: Constant
+		},
 		name: "players"
 	});
+
+	const submitForm = async (data) => {
+		console.log(data)
+		const response = await fetch('/startGame', {
+			method: 'POST',
+			headers: {
+		    	'Content-Type': 'application/json'
+		    },
+		    body: JSON.stringify(data)
+		});
+		const body = await response.json();
+
+		if (response.status !== 200) {
+		  throw Error(body.message) 
+		}
+		console.log('bodys back', body)
+
+	}
   
 	return (
 		<div>
-			<form onSubmit={handleSubmit(data => console.log(data))}>
+			<form onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 			  <ul>
 			  	<li>
 			  		<PlayerInput register={register} namePrefix='user' placeholderPrefix='YOUR ' />
