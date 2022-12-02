@@ -4,9 +4,15 @@ const phone = require("phone");
 module.exports = {
 	startGame: async (body) => {
 		// TODO Validation library?
-		if (!body || !body.firstName || !body.phoneNumber || !body.players || body.players.length < (setupUtils.MINIMUM_PLAYER_COUNT - 1)) {
+		if (!body || !body.firstName || !body.phoneNumber ) {
 			return { status: 400, response: {
 				message: 'Post body missing fields'
+			}}
+		}
+
+		if (!body.players || body.players.length < (setupUtils.MINIMUM_PLAYER_COUNT - 1)) {
+			return { status: 400, response: {
+				message: 'Not enough players to start game'
 			}}
 		}
 

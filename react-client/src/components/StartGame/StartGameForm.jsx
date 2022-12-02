@@ -1,17 +1,21 @@
-import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 
 const phone = require("phone");
 
 
 
 function StartGameForm() {
-	const { register, control, handleSubmit, reset, trigger, setError } = useForm({
+	const { register, clearErrors, control, handleSubmit, setError, formState: { errors }  } = useForm({
 		
 	});
 	const { fields, append, remove } = useFieldArray({
 		control,
 		rules: {
-			minLength: 1 // TODO: Constant
+			minLength: {
+				value: 2,
+				message: 'Please enter at least two players'
+			}, // TODO: Constant
+			required: 'Please enter at least two players',
 		},
 		name: "players"
 	});
@@ -28,7 +32,9 @@ function StartGameForm() {
 		const body = await response.json();
 
 		if (response.status !== 200) {
-		  throw Error(body.message) 
+			setError('players', { type: 'custom', message: body.message }) 
+		} else {
+			clearErrors('players')
 		}
 		console.log('bodys back', body)
 
@@ -39,19 +45,16 @@ function StartGameForm() {
 			<form onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 			  <ul>
 			  	<li>
-			  		<PlayerInput register={register} placeholderPrefix='YOUR ' />
+			  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
 			  	</li>
 			    {fields.map((item, index) => (
 			      <li key={item.id}>
-			      	<PlayerInput register={register} namePrefix={`players.${index}.`} />
-			        {/*<Controller
-			          render={({ field }) => <input {...field} />}
-			          name={`players.${index}.lastName`}
-			          control={control}
-			        />*/}
+			      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
 			        <button type="button" onClick={() => remove(index)}>X</button>
 			      </li>
 			    ))}
+  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
+
 			  </ul>
 			  <button
 			    type="button"
@@ -66,14 +69,16 @@ function StartGameForm() {
 }
 
 function PlayerInput(props) {
-	const { register, namePrefix= '', placeholderPrefix = '' } = props
+	const { errors, register, namePrefix= '', placeholderPrefix = '' } = props
 	return (
 		<>
-		    <input {...register(`${namePrefix}firstName`, {required: true})} placeholder={`${placeholderPrefix}First Name`} />
+		    <input {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name`} />
+  			{errors?.firstName && <span>{errors?.firstName.message}</span>}
 		    <input {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
 		    <input {...register(`${namePrefix}phoneNumber`, {
-		    	validate: v => phone(v, "USA").length !== 0
+		    	validate: v => phone(v, "USA").length !== 0 || 'Please enter a valid US phone number'
 		    })} placeholder={`${placeholderPrefix}Phone Number`}/>
+  			{errors?.phoneNumber && <span>{errors?.phoneNumber.message}</span>}
 		</>
 	)
 
