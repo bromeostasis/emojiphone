@@ -7,6 +7,10 @@ const models = require('../models');
 const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn')
 
+// TODO: Should not be duplicated :( :(
+const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. Please try again or contact our support team at TODO.";
+const ALREADY_ACTIVE_ERROR = "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!).";
+
 module.exports = {
     MINIMUM_PLAYER_COUNT: 2, // TODO: move to env
     INACTIVE_PLAYER_ERROR_CODE: 500,
@@ -142,8 +146,14 @@ module.exports = {
     isUserInActiveGame: async (user)  => {
         return await module.exports.areUsersInActiveGame([user])
     },
-    startGameIfReady: async (convoResults) => {
-        const { currentUser, channel: phoneNumber, gameReady, gameUsers } = convoResults
+    startGameIfReady: async ({ currentUser, channel: phoneNumber, gameReady, gameUsers, fromServer }) => {
+        const sendError = (phoneNumber, message) => {
+            if (fromServer) {
+                return message
+            }
+            return module.exports.sendGameFailedToSetupText(phoneNumber, message)
+        } // TODO: Questionable..
+
         if (gameReady) {
             try {
                 if (!currentUser) {
@@ -155,14 +165,14 @@ module.exports = {
                     turnConversation.takeFirstTurn(turns[0].gameId);
                 } else {
                     if (turns === module.exports.INACTIVE_PLAYER_ERROR_CODE) {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
+                        return sendError(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
                     } else {
-                        return module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
+                        return sendError(phoneNumber, ERROR_RESPONSE);
                     }
                 }
             } catch (err) {
                 console.log(err);
-                module.exports.sendGameFailedToSetupText(phoneNumber, ERROR_RESPONSE);
+                return sendError(phoneNumber, ERROR_RESPONSE);
             }
         }
     },
@@ -186,6 +196,7 @@ Learn more here: TODO`
         
     },
     createUser: async (user) => {
+        // TODO: needsOnboarding?
         const returnedUsers = await models.user.upsert(user, {returning: true}).catch(err => {
             console.log(err);
             throw err;

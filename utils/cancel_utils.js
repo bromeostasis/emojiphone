@@ -44,7 +44,9 @@ const clearStoredConversationsFromTurn = async (turn) => {
     if (turn) {
         const postgresStorageKey = utils.getPostgresStorageKeyFromPhoneNumber(turn.user.phoneNumber)
         const storedConvoInfo = await utils.postgresStorage.read([postgresStorageKey])
-        storedConvoInfo[postgresStorageKey].dialogState.dialogStack = []
+        if (storedConvoInfo[postgresStorageKey] && storedConvoInfo[postgresStorageKey].dialogState && storedConvoInfo[postgresStorageKey].dialogState.dialogStack) {
+            storedConvoInfo[postgresStorageKey].dialogState.dialogStack = []
+        }
         await utils.postgresStorage.write(storedConvoInfo)
     } else {
         console.log('Cancelling game where there is no current turn?! Game id:', game.id)
