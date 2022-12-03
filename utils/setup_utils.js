@@ -149,7 +149,12 @@ module.exports = {
     startGameIfReady: async ({ currentUser, channel: phoneNumber, gameReady, gameUsers, fromServer }) => {
         const sendError = (phoneNumber, message) => {
             if (fromServer) {
-                return message
+                return {
+                    status: 500, 
+                    response: {
+                        message
+                    },
+                }
             }
             return module.exports.sendGameFailedToSetupText(phoneNumber, message)
         } // TODO: Questionable..
@@ -165,7 +170,7 @@ module.exports = {
                     turnConversation.takeFirstTurn(turns[0].gameId);
                 } else {
                     if (turns === module.exports.INACTIVE_PLAYER_ERROR_CODE) {
-                        return sendError(phoneNumber, ALREADY_ACTIVE_GAME_ERROR);
+                        return sendError(phoneNumber, ALREADY_ACTIVE_ERROR);
                     } else {
                         return sendError(phoneNumber, ERROR_RESPONSE);
                     }

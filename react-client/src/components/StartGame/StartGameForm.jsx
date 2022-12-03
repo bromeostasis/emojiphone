@@ -12,7 +12,7 @@ function StartGameForm() {
 		control,
 		rules: {
 			minLength: {
-				value: 2,
+				value: 1,
 				message: 'Please enter at least two players'
 			}, // TODO: Constant
 			required: 'Please enter at least two players',
@@ -21,7 +21,6 @@ function StartGameForm() {
 	});
 
 	const submitForm = async (data) => {
-		console.log(data)
 		const response = await fetch('/startGame', {
 			method: 'POST',
 			headers: {
@@ -30,13 +29,11 @@ function StartGameForm() {
 		    body: JSON.stringify(data)
 		});
 		const body = await response.json();
-
 		if (response.status !== 200) {
-			setError('players', { type: 'custom', message: body.message }) 
+			setError('players.root', { type: 'custom', message: body.message }) 
 		} else {
-			clearErrors('players')
+			clearErrors('players.root')
 		}
-		console.log('bodys back', body)
 
 	}
   

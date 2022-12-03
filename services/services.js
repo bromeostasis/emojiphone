@@ -40,12 +40,11 @@ module.exports = {
 			currentUser: creatingUser,
 			gameUsers: users,
 			gameReady: true,
+			fromServer: true,
 		})
 
-		if (response === 500) { // TODO: Better error codes / handling?
-			return { status: 500, response: {
-				message: "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!)."
-			}}
+		if (response?.status === 500) { // TODO: Better error codes / handling?
+			return response
 		}
 
 		return { status: 200, response: {
