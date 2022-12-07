@@ -1,6 +1,7 @@
 const { Botkit } = require('botkit');
 const { TwilioAdapter } = require('botbuilder-adapter-twilio-sms');
 const { PostgresStorage } = require('@bromeostasis/botbuilder-storage-postgres');
+const entities = require('entities')
 const vCard = require('vcard');
 
 
@@ -52,6 +53,13 @@ module.exports = {
             adapter: adapter,
             storage: postgresStorage
         })
+
+        // Botkit html encodes its variables for some reason.. This undoes that :)
+        // See more here: https://github.com/howdyai/botkit/issues/240#issuecomment-432296085
+        module.exports.controller.middleware.send.use((bot, message, next) => {
+            message.text = entities.decodeHTML(message.text)
+            next();  
+        });
 
         module.exports.bot = await module.exports.controller.spawn({});
         module.exports.postgresStorage = postgresStorage;
