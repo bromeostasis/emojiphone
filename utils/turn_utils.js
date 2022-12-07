@@ -5,13 +5,13 @@ const { Op } = require('sequelize');
 const emojiRegex = require('emoji-regex');
 const emojiReg = emojiRegex();
 
-const { KEYWORDS } = require('../utils/constants')
+const { GAME_NAME, KEYWORDS } = require('../utils/constants')
 const MessageType = require('../types/message_type');
 const models = require('../models');
 const utils = require('../utils/utils');
 
 const textReg = /[a-zA-Z0-9\.\!\+\$\#\@\_\&\-\+\(\)\/\*\"\'\:\;\!\?\~\`\|\•\√\π\÷\×\¶\∆\£\¢\€\¥\^\°\=\{\}\\\]\[\✓\%\<\>\%\/\*\-\+\ç\ß\à\á\â\ä\æ\ã\å\ā\è\é\ē\ê\ë\û\ú\ù\ü\ū\î\ì\ï\í\ī\ó\ø\œ\ō\ô\ö\õ\ò\ñ]+/
-const FIRST_TURN_PROMPT = "Welcome to Emojiphone! You are the first player, so all you need to do is respond to this text with a phrase or sentence that is easy to describe with emojis!";
+const FIRST_TURN_PROMPT = `You are the first player, so all you need to do is respond to this text with a phrase or sentence that is easy to describe with emojis!`;
 
 module.exports = {
     isValidResponse: (response, messageType) => {
@@ -72,10 +72,10 @@ module.exports = {
         let message = "";
 
         if (isGroupMessage) {
-            message = `Great game of Emojiphone everyone! I've started a group text where we can discuss everything that went down. Here was our game:
+            message = `Great game of ${GAME_NAME} everyone! I've started a group text where we can discuss everything that went down. Here was our game:
 `
         } else {
-            message = `Your game of Emojiphone has completed! Here's the full transcript:
+            message = `Your game of ${GAME_NAME} has completed! Here's the full transcript:
 `
         }
 

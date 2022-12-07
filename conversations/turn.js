@@ -1,6 +1,6 @@
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
-const { PHRASES } = require('../utils/constants')
+const { GAME_NAME, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const turnUtils = require('../utils/turn_utils');
 const models = require('../models');
@@ -24,7 +24,7 @@ module.exports = {
             await module.exports.setConversationVariables(inConvo);
         });
 
-        convo.addMessage({text: "Time to take your turn in your game of Emojiphone!", action: TURN_THREAD}, DEFAULT_THREAD);
+        convo.addMessage({text: `Time to take your turn in your game of ${GAME_NAME}!`, action: TURN_THREAD}, DEFAULT_THREAD);
 
         convo.addMessage({
             text: `Sorry your response was not written in ONLY {{vars.currentMessageType}}. Please try again!`,

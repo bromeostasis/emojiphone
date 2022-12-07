@@ -1,4 +1,4 @@
-# emojiphone
-Emojiphone
+# mojiphone
+MojiPhone
 
 TODO
