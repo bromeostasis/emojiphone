@@ -95,6 +95,7 @@ ${name}: ${userMessage.message}`
             message += `
 
 If you'd like to start a group message to discuss your game, just click one of the following links!
+
 Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
 iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
 
