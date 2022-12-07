@@ -4,6 +4,7 @@ const { Op } = require('sequelize');
 const MessageType = require('../types/message_type');
 const models = require('../models');
 
+const { GAME_NAME } = require('../utils/constants')
 const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn')
 
@@ -168,7 +169,7 @@ module.exports = {
     },
     sendOnboardingTexts: async (users, initiatingUser) => {
         users.filter((user) => user.needsOnboarding).forEach(async (user) => {
-            const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of Emojiphone! You will receive another text from this phone number when it's your turn!
+            const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of ${GAME_NAME}! You will receive another text from this phone number when it's your turn!
 
 Learn more here: TODO`
             await utils.bot.startConversationWithUser(user.phoneNumber);

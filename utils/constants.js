@@ -1,4 +1,6 @@
 
+const GAME_NAME = 'MojiPhone'
+
 const KEYWORDS = {
     CANCEL_KEYWORD: 'cancel',
 	DONE_ADDING_CONTACTS_KEYWORD: 'done',
@@ -18,6 +20,7 @@ const PHRASES = {
 }
 
 module.exports = {
+	GAME_NAME,
 	KEYWORDS,
 	PHRASES
 }
