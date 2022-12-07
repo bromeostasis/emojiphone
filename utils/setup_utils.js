@@ -1,3 +1,4 @@
+require('custom-env').env(true);
 const _ = require("underscore");
 const { Op } = require('sequelize');
 
@@ -9,7 +10,6 @@ const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn')
 
 module.exports = {
-    MINIMUM_PLAYER_COUNT: 2, // TODO: move to env
     INACTIVE_PLAYER_ERROR_CODE: 500,
     /**
     * Setup the game by instantiating users and turns
@@ -108,7 +108,7 @@ module.exports = {
      * @param  {Object[]} users  List of "User" objects to include in the game.
      */
     isGameReady: (users) => {
-        return Array.isArray(users) && users.length >= module.exports.MINIMUM_PLAYER_COUNT - 1;
+        return Array.isArray(users) && users.length >= process.env.MINIMUM_PLAYER_COUNT - 1;
     },
 
     /**
