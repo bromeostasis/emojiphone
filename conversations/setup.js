@@ -1,5 +1,8 @@
+require('custom-env').env(true);
+
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
+
 
 const { GAME_NAME, KEYWORDS, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
@@ -83,7 +86,7 @@ module.exports = {
         let user;
         try {
             user = await utils.getUserByPhoneNumber(phoneNumber);
-            await convo.setVar("contactsLeft", setupUtils.MINIMUM_PLAYER_COUNT - 1);
+            await convo.setVar("contactsLeft", process.env.MINIMUM_PLAYER_COUNT - 1);
             await convo.setVar("gameUsers", []);
             if (!user) {
                 await convo.setVar("welcomeText", FIRST_TIME_WELCOME_PROMPT);
