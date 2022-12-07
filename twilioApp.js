@@ -63,7 +63,24 @@ module.exports = {
             } catch(e) {
                 console.log(e);
             }
-        });        
+        });
+
+        // Wellp.. Made regexes matching everything except keywords. Turns out it wasn't necessary lol but I'm proud!
+        // const regexes = []
+        // for (const keyword of Object.keys(KEYWORDS)) {
+        //     const regexString = `^(?!${KEYWORDS[keyword]})`
+        //     const reg = new RegExp(regexString, 'i')
+        //     regexes.push(reg)
+        // }
+        // utils.controller.hears(regexes, 'message', async (bot, message) => {
+
+        utils.controller.hears(new RegExp('.*'), 'message', async (bot, message) => {
+            try {
+                await bot.say(`Sorry, I didn't understand that. You can text "${KEYWORDS.INITIATE_GAME_KEYWORD}" to start a new game, "${KEYWORDS.RESTART_KEYWORD}" to restart your last played game, or "${KEYWORDS.STATUS_KEYWORD}" to check the status of an in-progress game!`)
+            } catch(e) {
+                console.log(e);
+            }
+        })
     },
     setupWebserver: async function() {
         utils.controller.webserver.get('/mmsLink/:platform/:gameId', async(req, res) => {
