@@ -3,7 +3,7 @@
     "containerDefinitions": [
         {
             "name": "emojiphone",
-            "image": "956918984222.dkr.ecr.us-east-2.amazonaws.com/emojiphone:e60b5d4-count",
+            "image": "956918984222.dkr.ecr.us-east-2.amazonaws.com/emojiphone:a2ce058",
             "cpu": 0,
             "memory": 498,
             "links": [],
