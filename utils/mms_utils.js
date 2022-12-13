@@ -5,7 +5,7 @@ module.exports = {
     makeMmsUrl: async (gameId, platform) => {
         let isGroupMessage = true;
 
-        let messageAndPhoneNumbers = await module.exports.getGameSummary(gameId, isGroupMessage);
+        let messageAndPhoneNumbers = await module.exports.getGameSummary(gameId);
         let phoneString = messageAndPhoneNumbers.phoneNumbers.join(',');
 
         let url = "sms://"
