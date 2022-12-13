@@ -23,10 +23,10 @@ module.exports = {
     },
     /**
     * Creates a summary (including a transcript) of a given game
-    * @param  {uuid} gameId Database identifier for the game that needs to be summarized
-    * #returns: {
-    *   phoneNumbers: {string[]} List of phone numbers that played in the game
-    *   message: {string} Message that needs to be sent
+    * @param {uuid} gameId Database identifier for the game that needs to be summarized
+    * @returns: {Object} phoneNumbersAndMessage Compound object with necessary data
+    * @returns {string[]} phoneNumbersAndMessage.phoneNumbers List of phone numbers that played in the game
+    * @returns {string} phoneNumbersAndMessage.message  Message that needs to be sent
     * }
     */
     getGameSummary: async (gameId) => {
