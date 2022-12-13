@@ -45,7 +45,7 @@ module.exports = {
                 module.exports.beginNextTurn(results.currentTurn);
             } else {
                 await models.game.update({completed: true}, {where: {id: results.currentTurn.gameId}})
-                module.exports.sendEndGameMessages(results.currentTurn.gameId);
+                turnUtils.sendEndGameMessages(results.currentTurn.gameId);
             }
         })
         await utils.controller.addDialog(convo);
@@ -96,17 +96,6 @@ module.exports = {
             }], 'none', TURN_THREAD
         );
         
-    },
-    /**
-     * Send messages to all participants that the game has ended
-     * @param  {integer} gameId   gameId of game that just ended
-     */
-    sendEndGameMessages: async (gameId) => {
-        let messageAndPhoneNumbers = await turnUtils.getEndGameMessageWithPhoneNumbers(gameId);
-        for (let phoneNumber of messageAndPhoneNumbers.phoneNumbers) {
-            await utils.bot.startConversationWithUser(phoneNumber);
-            await utils.bot.say(messageAndPhoneNumbers.message);
-        }
     },
     /**
      * Given the turn that was just completed, begin the next turn

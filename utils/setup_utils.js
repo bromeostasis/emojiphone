@@ -2,6 +2,8 @@ require('custom-env').env(true);
 const _ = require("underscore");
 const { Op } = require('sequelize');
 
+const gameUtils = require('./game_utils')
+
 const MessageType = require('../types/message_type');
 const models = require('../models');
 
@@ -79,29 +81,10 @@ module.exports = {
     * @param  {integer} gameId gameId of game to be restarted
     */
     setupPreviouslyPlayedGame: async (gameId) => {
-        let previousTurns = await module.exports.getUsersByGameId(gameId);
-        let users = previousTurns.map(turn => turn.user);
+        let turnsWithUsers = await gameUtils.getUsersViaTurnByGameId(gameId);
+        let users = turnsWithUsers.map(turn => turn.user);
         let newTurns = await module.exports.setupGame([], users);
-        return {previousTurns: previousTurns, newTurns: newTurns}
-    },
-    /**
-    * Get users that were in a completed game (whether they sent a message or not)
-    * @param  {integer} gameId gameId of game to be restarted
-    */
-    getUsersByGameId: async (gameId) => {
-        return await models.turn.findAll(
-            {
-                attributes: [],
-                where: {
-                    gameId: gameId,
-                }, 
-                include: [
-                    {
-                        model: models.user, as: "user"
-                    }
-                ]
-            }
-        )
+        return { previousTurns: turnsWithUsers, newTurns: newTurns } // TODO: Function that calls this one doesn't need the whole turn, just the users; return "users" instead
     },
     /**
      * Validate that we are ready to start the game!
