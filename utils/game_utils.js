@@ -7,17 +7,19 @@ module.exports = {
     getLatestGameByPhoneNumber: async (phoneNumber, mustBeCompleted=false) => {
         const latestTurn = await module.exports.getLatestTurnByPhoneNumber(phoneNumber)
 
-        // This logic relies on the fact that only one game can be played at a time
-        // If we allow multiple active games, this will need to get updated anyways to choose which game to cancel
-        const lastPlayedGame = await models.game.findOne({
-            where: {
-                id: latestTurn.gameId,
-                completed: mustBeCompleted
-            }
-        })
+        if (latestTurn) {
+            // This logic relies on the fact that only one game can be played at a time
+            // If we allow multiple active games, this will need to get updated anyways to choose which game to cancel
+            const lastPlayedGame = await models.game.findOne({
+                where: {
+                    id: latestTurn.gameId,
+                    completed: mustBeCompleted
+                }
+            })
 
-        if (lastPlayedGame) {
-            return lastPlayedGame
+            if (lastPlayedGame) {
+                return lastPlayedGame
+            }
         }
         return undefined
     },
