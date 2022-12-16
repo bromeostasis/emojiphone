@@ -31,26 +31,33 @@ body {
 }
 
 p {
-	font-size: 28px;
+	font-size: 5.5vw;
 	font-weight: 800;
 }
 
 h2 {
 	color: $yellow;
 	font-family: righteous;
+	font-size: 6vw;
 }
 
 a {
 	text-decoration: none;
 	color: white;
 	font-weight: 800;
-	font-size: 20px;
+	font-size: 4.5vw;
 	overflow: auto;
 	white-space: nowrap;
-	:hover {
+}
 
+.spacer {
+	padding: 2rem 0;
+	p {
+		overflow: hidden;
+		white-space: nowrap;
 	}
 }
+
 
 .btn-primary {
 	background-color: $tangerine;
@@ -60,9 +67,13 @@ a {
 
 .btn {
 	font-family: righteous;
-	font-size: 28px;
+	font-size: 5.5vw;
 	overflow: auto;
 	white-space: nowrap;
+}
+
+.container {
+	padding-top: 1rem;
 }
 
 
