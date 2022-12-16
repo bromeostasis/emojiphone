@@ -38,7 +38,13 @@ p {
 h2 {
 	color: $yellow;
 	font-family: righteous;
-	font-size: 6vw;
+	font-size: 8vw;
+}
+
+h3 {
+	color: white;
+	font-family: righteous;
+	font-size: 6.5vw;
 }
 
 a {
@@ -55,6 +61,7 @@ a {
 	p {
 		overflow: hidden;
 		white-space: nowrap;
+		font-size: 4.5vw;
 	}
 }
 

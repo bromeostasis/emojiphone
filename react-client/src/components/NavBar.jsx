@@ -6,14 +6,13 @@ import Row from 'react-bootstrap/Row';
 const NavBar = (props) => {
   return (
     <Row>
-    	<Col xs={5}>
+    	<Col xs={6}>
     	  <h2>
 	    	mojiph😌ne
     	  </h2>
     	 </Col>
-    	 <Col xs={1}></Col>
     	 <Col xs={3}>
-    	 	<a href='#what'>🤔 WHAT?</a>
+    	 	<a href='#how'>🤔 HOW?</a>
     	 </Col>
     	 <Col xs={3}>
     	 	<a href='#play'>▶️ PLAY</a>

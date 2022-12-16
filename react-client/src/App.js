@@ -2,6 +2,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCallback, useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container';
 
+import ButHow from './components/ButHow'
 import EmojiSpacer from './components/EmojiSpacer'
 import HeroText from './components/HeroText'
 import NavBar from './components/NavBar'
@@ -29,9 +30,11 @@ function App() {
   return (
     <div className="App">
       <Container>
-        <NavBar></NavBar>
-        <HeroText></HeroText>
-        <EmojiSpacer></EmojiSpacer>
+        <NavBar />
+        <HeroText />
+        <EmojiSpacer />
+        <ButHow />
+        <EmojiSpacer />
         Backend's working? {message}
       </Container>
     </div>

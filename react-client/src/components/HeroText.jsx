@@ -15,11 +15,11 @@ const HeroText = () => {
 	    </Col>
 	  </Row>
 	  <Row>
-	    <Col></Col>
-	    <Col>
+	    <Col xs={3}></Col>
+	    <Col xs={6}>
 	      <Button>⚡️play now⚡️</Button>
 	    </Col>
-	    <Col></Col>
+	    <Col xs={3}></Col>
 	  </Row>
 	 </>
   )
