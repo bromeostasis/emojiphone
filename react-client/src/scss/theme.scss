@@ -1,0 +1,52 @@
+// Required
+@import "../node_modules/bootstrap/scss/functions";
+
+$amethyst: #9B5DE5;
+$tangerine: #F8924F;
+$yellow: #FEDD0B;
+$capri: #00BBF9;
+
+// Default variable overrides
+$body-bg: $amethyst;
+$body-color: #fff;
+
+$primary: $tangerine;
+$secondary: $tangerine;
+$success: $yellow;
+$info: $capri;
+
+@font-face {
+	font-family: generalSans;
+	src: url(fonts/OTF/GeneralSans-Regular.otf);
+}
+
+@font-face {
+	font-family: righteous;
+	src: url(fonts/Righteous-Regular.ttf);
+}
+
+p {
+	font-family: generalSans;
+	font-size: 28px;
+	font-weight: 800;
+}
+
+.btn-primary {
+	background-color: $tangerine;
+	border-radius: 0;
+	color: white;
+}
+
+.btn {
+	font-family: righteous;
+	font-size: 28px;
+	overflow: auto;
+	white-space: nowrap;
+	
+}
+
+// Required
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/maps";
+@import "../node_modules/bootstrap/scss/mixins";
+@import "../node_modules/bootstrap/scss/root";
