@@ -25,10 +25,31 @@ $info: $capri;
 	src: url(fonts/Righteous-Regular.ttf);
 }
 
-p {
+body {
+
 	font-family: generalSans;
+}
+
+p {
 	font-size: 28px;
 	font-weight: 800;
+}
+
+h2 {
+	color: $yellow;
+	font-family: righteous;
+}
+
+a {
+	text-decoration: none;
+	color: white;
+	font-weight: 800;
+	font-size: 20px;
+	overflow: auto;
+	white-space: nowrap;
+	:hover {
+
+	}
 }
 
 .btn-primary {
@@ -42,8 +63,8 @@ p {
 	font-size: 28px;
 	overflow: auto;
 	white-space: nowrap;
-	
 }
+
 
 // Required
 @import "../node_modules/bootstrap/scss/variables";

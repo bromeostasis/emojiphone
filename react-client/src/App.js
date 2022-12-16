@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Container from 'react-bootstrap/Container';
 
 import HeroText from './components/HeroText'
+import NavBar from './components/NavBar'
 import logo from './logo.svg';
 import './scss/theme.scss';
 
@@ -27,6 +28,7 @@ function App() {
   return (
     <div className="App">
       <Container>
+        <NavBar></NavBar>
         <HeroText></HeroText>
         Backend's working? {message}
       </Container>
