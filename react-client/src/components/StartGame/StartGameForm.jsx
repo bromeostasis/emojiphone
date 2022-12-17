@@ -1,4 +1,8 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
 
 const phone = require("phone");
 
@@ -38,30 +42,38 @@ function StartGameForm() {
 	}
   
 	return (
-		<div>
-			<form onSubmit={handleSubmit(async (data) => await submitForm(data))}>
-			  <ul>
-			  	<li>
-			  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
-			  	</li>
-			    {fields.map((item, index) => (
-			      <li key={item.id}>
-			      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
-			        <button type="button" onClick={() => remove(index)}>X</button>
-			      </li>
-			    ))}
-  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
+		<Row className='gameForm'>
+			<Col>
+				<Form noValidate validated={Object.keys(errors).length > 0} onSubmit={handleSubmit(async (data) => await submitForm(data))}>
+				  	<Row>
+				  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
+				  	</Row>
+				    {fields.map((item, index) => (
+				      <Row key={item.id}>
+				      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
+				      	<Col xs={1} className='d-flex justify-content-center'>
+					        <Button 
+					        	variant='link'
+					        	type="button"
+					        	onClick={() => remove(index)}
+					        	className='pt-0 pb-0'
+					        >
+					        	⛔️
+					        </Button>
+				      	</Col>
+				      </Row>
+				    ))}
+	  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
 
-			  </ul>
-			  <button
-			    type="button"
-			    onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
-			  >
-			    append
-			  </button>
-			  <input type="submit" />
-			</form>
-		</div>
+				  <Button
+				    onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
+				  >
+				    append
+				  </Button>
+				  <input type="submit" />
+				</Form>
+			</Col>
+		</Row>
 	)
 }
 
@@ -69,13 +81,23 @@ function PlayerInput(props) {
 	const { errors, register, namePrefix= '', placeholderPrefix = '' } = props
 	return (
 		<>
-		    <input {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name`} />
-  			{errors?.firstName && <span>{errors?.firstName.message}</span>}
-		    <input {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
-		    <input {...register(`${namePrefix}phoneNumber`, {
-		    	validate: v => phone(v, "USA").length !== 0 || 'Please enter a valid US phone number'
-		    })} placeholder={`${placeholderPrefix}Phone Number`}/>
-  			{errors?.phoneNumber && <span>{errors?.phoneNumber.message}</span>}
+			<Col xs={4}>
+				<Form.Group controlId={`${namePrefix}firstName`}>
+				    <Form.Control {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name`} />
+		  			{errors?.firstName && <Form.Control.Feedback>{errors?.firstName.message}</Form.Control.Feedback>}
+				</Form.Group>
+			</Col>
+			<Col xs={4}>
+		    	<Form.Control {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
+			</Col>
+			<Col xs={3}>
+				<Form.Group controlId={`${namePrefix}phoneNumber`}>
+				    <Form.Control {...register(`${namePrefix}phoneNumber`, {
+				    	validate: v => phone(v, "USA").length !== 0 || 'Please enter a valid US phone number'
+				    })} placeholder={`${placeholderPrefix}Phone Number`}/>
+		  			{errors?.phoneNumber && <span>{errors?.phoneNumber.message}</span>}
+	  		</Form.Group>
+			</Col>
 		</>
 	)
 
