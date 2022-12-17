@@ -16,7 +16,7 @@ const HeroText = () => {
 	  </Row>
 	  <Row>
 	    <Col xs={3}></Col>
-	    <Col xs={6}>
+	    <Col xs={6} className='d-flex justify-content-center'>
 	      <Button>⚡️play now⚡️</Button>
 	    </Col>
 	    <Col xs={3}></Col>

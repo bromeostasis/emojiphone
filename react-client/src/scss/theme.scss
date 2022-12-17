@@ -32,29 +32,53 @@ body {
 
 p {
 	font-size: 5.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
 	font-weight: 800;
 }
 
 h2 {
 	color: $yellow;
 	font-family: righteous;
-	font-size: 8vw;
 	margin-bottom: 0;
+	font-size: 7.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 4.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 3.5vw;
+	}
 }
 
 h3 {
 	color: white;
 	font-family: righteous;
 	font-size: 6.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 3.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 2.5vw;
+	}
 }
 
 a {
 	text-decoration: none;
 	color: white;
 	font-weight: 800;
-	font-size: 4vw;
 	overflow: auto;
 	white-space: nowrap;
+	font-size: 4vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
 	&:hover {
 		color: $tangerine;
 	}
@@ -69,6 +93,12 @@ a {
 		overflow: hidden;
 		white-space: nowrap;
 		font-size: 4.5vw;
+		@media (min-width: 1200px) { 
+			font-size: 2.5vw;
+		}
+		@media (min-width: 1400px) {
+			font-size: 1.5vw;
+		}
 	}
 }
 
@@ -91,6 +121,12 @@ a {
 .btn {
 	font-family: righteous;
 	font-size: 5.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
 	overflow: auto;
 	white-space: nowrap;
 }

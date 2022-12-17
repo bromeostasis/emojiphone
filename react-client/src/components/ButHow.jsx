@@ -8,11 +8,11 @@ const ButHow = (props) => {
   return (
   	<>
 	  <Row id='how'>
-	  	<Col xs={3}></Col>
-	  	<Col xs={8}>
+	  	<Col xs={2}></Col>
+	  	<Col xs={8} className='d-flex justify-content-center'>
 	  	  <h3>🤔 but how 🤔</h3>
 	  	</Col>
-	  	<Col xs={1}></Col>
+	  	<Col xs={2}></Col>
 	  </Row>
 	  <Row className='pt-3'>
 	  	<Col xs={6}>
