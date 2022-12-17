@@ -54,6 +54,12 @@ a {
 	font-size: 4.5vw;
 	overflow: auto;
 	white-space: nowrap;
+	&:hover {
+		color: $tangerine;
+	}
+	&:active {
+		color: $tangerine!important;
+	}
 }
 
 .spacer {
@@ -68,8 +74,17 @@ a {
 
 .btn-primary {
 	background-color: $tangerine;
+	border-color: $tangerine;
 	border-radius: 0;
 	color: white;
+	&:hover {
+		background-color: $capri;
+		border-color: $capri;
+	}
+	&:active {
+		background-color: $capri!important;
+		border-color: $capri!important;
+	}
 }
 
 .btn {
