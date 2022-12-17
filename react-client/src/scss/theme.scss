@@ -39,6 +39,7 @@ h2 {
 	color: $yellow;
 	font-family: righteous;
 	font-size: 8vw;
+	margin-bottom: 0;
 }
 
 h3 {
@@ -51,7 +52,7 @@ a {
 	text-decoration: none;
 	color: white;
 	font-weight: 800;
-	font-size: 4.5vw;
+	font-size: 4vw;
 	overflow: auto;
 	white-space: nowrap;
 	&:hover {
@@ -96,6 +97,16 @@ a {
 
 .container {
 	padding-top: 1rem;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+}
+
+.content-end {
+	justify-content: end;
+	padding-right: 0;
 }
 
 

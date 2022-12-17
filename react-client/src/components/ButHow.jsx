@@ -33,7 +33,7 @@ const ButHow = (props) => {
 	  <Row>
 	  	<Col xs={6}>
 	  		<p>
-	  			3. Respond to the text in emojis only when it's your turn.
+	  			3. When it's your turn, you'll translate the previous message between emoji-only and text-only.
   			</p>
 		</Col>
 		<Col xs={6}></Col>
