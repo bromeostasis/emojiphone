@@ -47,7 +47,7 @@ module.exports = {
         }, NOT_FINISHED_THREAD);
         
         convo.addMessage({
-            text: `You haven't played any games yet. Text me the word "${KEYWORDS.INITIATE_GAME_KEYWORD}" to begin your first game!`, 
+            text: `You haven't played any games yet. Text me the word "${KEYWORDS.INITIATE_GAME_KEYWORD}" to start your first game!`, 
             action: COMPLETE_ACTION
         }, NO_GAMES_THREAD);
         

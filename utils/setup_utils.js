@@ -1,9 +1,13 @@
+require('custom-env').env(true);
 const _ = require("underscore");
 const { Op } = require('sequelize');
+
+const gameUtils = require('./game_utils')
 
 const MessageType = require('../types/message_type');
 const models = require('../models');
 
+const { GAME_NAME } = require('../utils/constants')
 const utils = require('../utils/utils');
 const turnConversation = require('../conversations/turn')
 
@@ -12,7 +16,6 @@ const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. 
 const ALREADY_ACTIVE_ERROR = "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!).";
 
 module.exports = {
-    MINIMUM_PLAYER_COUNT: 2, // TODO: move to env
     INACTIVE_PLAYER_ERROR_CODE: 500,
     /**
     * Setup the game by instantiating users and turns
@@ -82,36 +85,17 @@ module.exports = {
     * @param  {integer} gameId gameId of game to be restarted
     */
     setupPreviouslyPlayedGame: async (gameId) => {
-        let previousTurns = await module.exports.getUsersByGameId(gameId);
-        let users = previousTurns.map(turn => turn.user);
+        let turnsWithUsers = await gameUtils.getUsersViaTurnByGameId(gameId);
+        let users = turnsWithUsers.map(turn => turn.user);
         let newTurns = await module.exports.setupGame([], users);
-        return {previousTurns: previousTurns, newTurns: newTurns}
-    },
-    /**
-    * Get users that were in a completed game (whether they sent a message or not)
-    * @param  {integer} gameId gameId of game to be restarted
-    */
-    getUsersByGameId: async (gameId) => {
-        return await models.turn.findAll(
-            {
-                attributes: [],
-                where: {
-                    gameId: gameId,
-                }, 
-                include: [
-                    {
-                        model: models.user, as: "user"
-                    }
-                ]
-            }
-        )
+        return { previousTurns: turnsWithUsers, newTurns: newTurns } // TODO: Function that calls this one doesn't need the whole turn, just the users; return "users" instead
     },
     /**
      * Validate that we are ready to start the game!
      * @param  {Object[]} users  List of "User" objects to include in the game.
      */
     isGameReady: (users) => {
-        return Array.isArray(users) && users.length >= module.exports.MINIMUM_PLAYER_COUNT - 1;
+        return Array.isArray(users) && users.length >= process.env.MINIMUM_PLAYER_COUNT - 1;
     },
 
     /**
@@ -183,7 +167,7 @@ module.exports = {
     },
     sendOnboardingTexts: async (users, initiatingUser) => {
         users.filter((user) => user.needsOnboarding).forEach(async (user) => {
-            const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of Emojiphone! You will receive another text from this phone number when it's your turn!
+            const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of ${GAME_NAME}! You will receive another text from this phone number when it's your turn!
 
 Learn more here: TODO`
             await utils.bot.startConversationWithUser(user.phoneNumber);

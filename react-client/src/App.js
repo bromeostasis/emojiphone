@@ -1,8 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './scss/theme.scss';
 
+import Container from 'react-bootstrap/Container';
+
+import ButHow from './components/ButHow'
+import EmojiSpacer from './components/EmojiSpacer'
+import HeroText from './components/HeroText'
+import NavBar from './components/NavBar'
 import StartGame from './components/StartGame'
-import logo from './logo.svg';
-import './App.css';
 
 function App() {
   const [message, setMessage] = useState('')
@@ -24,23 +30,15 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React and post a cool message:
-
-          {message}
-        </a>
+      <Container>
+        <NavBar />
+        <HeroText />
+        <EmojiSpacer />
+        <ButHow />
+        <EmojiSpacer />
         <StartGame />
-      </header>
+        Backend's working? {message}
+      </Container>
     </div>
   );
 }

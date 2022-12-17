@@ -5,13 +5,14 @@ const { Op } = require('sequelize');
 const emojiRegex = require('emoji-regex');
 const emojiReg = emojiRegex();
 
-const { KEYWORDS } = require('../utils/constants')
+const { GAME_NAME, KEYWORDS } = require('../utils/constants')
 const MessageType = require('../types/message_type');
 const models = require('../models');
 const utils = require('../utils/utils');
+const gameUtils = require('../utils/game_utils');
 
 const textReg = /[a-zA-Z0-9\.\!\+\$\#\@\_\&\-\+\(\)\/\*\"\'\:\;\!\?\~\`\|\•\√\π\÷\×\¶\∆\£\¢\€\¥\^\°\=\{\}\\\]\[\✓\%\<\>\%\/\*\-\+\ç\ß\à\á\â\ä\æ\ã\å\ā\è\é\ē\ê\ë\û\ú\ù\ü\ū\î\ì\ï\í\ī\ó\ø\œ\ō\ô\ö\õ\ò\ñ]+/
-const FIRST_TURN_PROMPT = "Welcome to Emojiphone! You are the first player, so all you need to do is respond to this text with a phrase or sentence that is easy to describe with emojis!";
+const FIRST_TURN_PROMPT = `You are the first player, so all you need to do is respond to this text with a phrase or sentence that is easy to describe with emojis!`;
 
 module.exports = {
     isValidResponse: (response, messageType) => {
@@ -55,58 +56,27 @@ module.exports = {
             }
         )
     },
-    sendEndGameMessage: async (gameId) => {
-        let messageAndPhoneNumbers = await module.exports.getEndGameMessageWithPhoneNumbers(gameId);
+    sendEndGameMessages: async (gameId) => {
+        let turnsWithUsers = await gameUtils.getUsersViaTurnByGameId(gameId)
+        const endGameMessage = module.exports.getEndGameMessage(gameId)
 
-        for (let phoneNumber of messageAndPhoneNumbers.phoneNumbers) {
-            utils.bot.say({text: messageAndPhoneNumbers.message, channel: phoneNumber}, (err, response) => {
-                if (err) {
-                    console.log(err);
-                }
-            });
+        for (let turnWithUser of turnsWithUsers) {
+            try {
+                await utils.bot.startConversationWithUser(turnWithUser.user.phoneNumber)
+                await utils.bot.say(endGameMessage)
+            }
+            catch (err) {
+                console.log(err)
+            };
         }
     },
-    getEndGameMessageWithPhoneNumbers: async (gameId, isGroupMessage) => {
-        let usersAndMessages = await module.exports.getUsersAndMessagesFromGameId(gameId);
+    getEndGameMessage: (gameId) => {
+        return `Your game of ${GAME_NAME} has completed! To see the results and start a group message to discuss your game, just click one of the following links!
 
-        let message = "";
-
-        if (isGroupMessage) {
-            message = `Great game of Emojiphone everyone! I've started a group text where we can discuss everything that went down. Here was our game:
-`
-        } else {
-            message = `Your game of Emojiphone has completed! Here's the full transcript:
-`
-        }
-
-        let phoneNumbers = [];
-
-        for (let userMessage of usersAndMessages) {
-            let user = userMessage.user;
-            phoneNumbers.push(user.phoneNumber);
-            let name = user.firstName;
-            name += (user.lastName) ? " " + user.lastName : "";
-            
-            message += `
-${name}: ${userMessage.message}`
-        }
-
-        if (!isGroupMessage) {
-            message += `
-
-If you'd like to start a group message to discuss your game, just click one of the following links!
 Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
 iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
 
 If you'd like to restart your latest game, simply send a message to this number with the word "${KEYWORDS.RESTART_KEYWORD}".`
-
-        }
-
-        return {
-            phoneNumbers: phoneNumbers,
-            message: message
-        };
-
     },
     // Prob move to game utils.. And test those succahs
     getUsersAndMessagesFromGameId: async (gameId) => {

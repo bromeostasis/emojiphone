@@ -1,0 +1,153 @@
+// Required
+@import "../../node_modules/bootstrap/scss/functions";
+
+$amethyst: #9B5DE5;
+$tangerine: #F8924F;
+$yellow: #FEDD0B;
+$capri: #00BBF9;
+
+// Default variable overrides
+$body-bg: $amethyst;
+$body-color: #fff;
+
+$primary: $tangerine;
+$secondary: $tangerine;
+$success: $yellow;
+$info: $capri;
+
+@font-face {
+	font-family: generalSans;
+	src: url(fonts/OTF/GeneralSans-Regular.otf);
+}
+
+@font-face {
+	font-family: righteous;
+	src: url(fonts/Righteous-Regular.ttf);
+}
+
+body {
+
+	font-family: generalSans;
+}
+
+p {
+	font-size: 5.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
+	font-weight: 800;
+}
+
+h2 {
+	color: $yellow;
+	font-family: righteous;
+	margin-bottom: 0;
+	font-size: 7.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 4.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 3.5vw;
+	}
+}
+
+h3 {
+	color: white;
+	font-family: righteous;
+	font-size: 6.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 3.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 2.5vw;
+	}
+}
+
+a {
+	text-decoration: none;
+	color: white;
+	font-weight: 800;
+	overflow: auto;
+	white-space: nowrap;
+	font-size: 4vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
+	&:hover {
+		color: $tangerine;
+	}
+	&:active {
+		color: $tangerine!important;
+	}
+}
+
+.spacer {
+	padding: 2rem 0;
+	p {
+		overflow: hidden;
+		white-space: nowrap;
+		font-size: 4.5vw;
+		@media (min-width: 1200px) { 
+			font-size: 2.5vw;
+		}
+		@media (min-width: 1400px) {
+			font-size: 1.5vw;
+		}
+	}
+}
+
+
+.btn-primary {
+	background-color: $tangerine;
+	border-color: $tangerine;
+	border-radius: 0;
+	color: white;
+	&:hover {
+		background-color: $capri;
+		border-color: $capri;
+	}
+	&:active {
+		background-color: $capri!important;
+		border-color: $capri!important;
+	}
+}
+
+.btn {
+	font-family: righteous;
+	font-size: 5.5vw;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
+	overflow: auto;
+	white-space: nowrap;
+}
+
+.container {
+	padding-top: 1rem;
+}
+
+.center {
+	display: flex;
+	align-items: center;
+}
+
+.content-end {
+	justify-content: end;
+	padding-right: 0;
+}
+
+
+// Required
+@import "../../node_modules/bootstrap/scss/variables";
+@import "../../node_modules/bootstrap/scss/maps";
+@import "../../node_modules/bootstrap/scss/mixins";
+@import "../../node_modules/bootstrap/scss/root";

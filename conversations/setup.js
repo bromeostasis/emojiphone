@@ -1,7 +1,10 @@
+require('custom-env').env(true);
+
 const phone = require("phone");
 const { BotkitConversation } = require('botkit');
 
-const { KEYWORDS, PHRASES } = require('../utils/constants')
+
+const { GAME_NAME, KEYWORDS, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const setupUtils = require('../utils/setup_utils');
 const cancelConversation = require('./cancel');
@@ -28,7 +31,7 @@ const ALREADY_ACTIVE_THREAD = 'alreadyActive';
 const DEFAULT_THREAD = 'default';
 const NAME_PATTERN = /^[a-zA-Z][a-zA-Z\-\s]+$/;
 const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. Please try again or contact our support team at TODO.";
-const FIRST_TIME_WELCOME_PROMPT = "Welcome to Emojiphone! Thanks for starting a new game!";
+const FIRST_TIME_WELCOME_PROMPT = `Welcome to ${GAME_NAME}! Thanks for starting a new game!`;
 const ALREADY_ACTIVE_ERROR = "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!).";
 const ALREADY_ACTIVE_GAME_ERROR = ALREADY_ACTIVE_ERROR + `
 
@@ -63,12 +66,12 @@ module.exports = {
         module.exports.addContactsMessages(convo);
 
         convo.addMessage({
-            text: 'Welcome to Emojiphone! Thanks for starting a new game!',
+            text: `Welcome to ${GAME_NAME}! Thanks for starting a new game!`,
             action: ADD_USER_THREAD
         }, NEW_USER_THREAD);
 
         convo.addMessage({
-            text: `Welcome back to Emojiphone, {{vars.currentUser.firstName}}! Thanks for starting a new game!`,
+            text: `Welcome back to ${GAME_NAME}, {{vars.currentUser.firstName}}! Thanks for starting a new game!`,
             action: ADD_CONTACTS_THREAD
         }, EXISTING_USER_THREAD);
 
@@ -83,13 +86,13 @@ module.exports = {
         let user;
         try {
             user = await utils.getUserByPhoneNumber(phoneNumber);
-            await convo.setVar("contactsLeft", setupUtils.MINIMUM_PLAYER_COUNT - 1);
+            await convo.setVar("contactsLeft", process.env.MINIMUM_PLAYER_COUNT - 1);
             await convo.setVar("gameUsers", []);
             if (!user) {
                 await convo.setVar("welcomeText", FIRST_TIME_WELCOME_PROMPT);
                 await convo.gotoThread(NEW_USER_THREAD);
             } else {
-                await convo.setVar("welcomeText", `Welcome back to Emojiphone, ${user.firstName}! Thanks for starting a new game!`);
+                await convo.setVar("welcomeText", `Welcome back to ${GAME_NAME}, ${user.firstName}! Thanks for starting a new game!`);
                 await convo.setVar("currentUser", user);
                 await convo.gotoThread(EXISTING_USER_THREAD);
             }

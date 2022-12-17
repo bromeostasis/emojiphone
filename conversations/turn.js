@@ -1,6 +1,7 @@
-const phone = require("phone");
 const { BotkitConversation } = require('botkit');
-const { PHRASES } = require('../utils/constants')
+const phone = require("phone");
+
+const { GAME_NAME, PHRASES } = require('../utils/constants')
 const utils = require('../utils/utils');
 const turnUtils = require('../utils/turn_utils');
 const models = require('../models');
@@ -24,7 +25,7 @@ module.exports = {
             await module.exports.setConversationVariables(inConvo);
         });
 
-        convo.addMessage({text: "Time to take your turn in your game of Emojiphone!", action: TURN_THREAD}, DEFAULT_THREAD);
+        convo.addMessage({text: `Time to take your turn in your game of ${GAME_NAME}!`, action: TURN_THREAD}, DEFAULT_THREAD);
 
         convo.addMessage({
             text: `Sorry your response was not written in ONLY {{vars.currentMessageType}}. Please try again!`,
@@ -44,7 +45,7 @@ module.exports = {
                 module.exports.beginNextTurn(results.currentTurn);
             } else {
                 await models.game.update({completed: true}, {where: {id: results.currentTurn.gameId}})
-                module.exports.sendEndGameMessages(results.currentTurn.gameId);
+                turnUtils.sendEndGameMessages(results.currentTurn.gameId);
             }
         })
         await utils.controller.addDialog(convo);
@@ -95,17 +96,6 @@ module.exports = {
             }], 'none', TURN_THREAD
         );
         
-    },
-    /**
-     * Send messages to all participants that the game has ended
-     * @param  {integer} gameId   gameId of game that just ended
-     */
-    sendEndGameMessages: async (gameId) => {
-        let messageAndPhoneNumbers = await turnUtils.getEndGameMessageWithPhoneNumbers(gameId);
-        for (let phoneNumber of messageAndPhoneNumbers.phoneNumbers) {
-            await utils.bot.startConversationWithUser(phoneNumber);
-            await utils.bot.say(messageAndPhoneNumbers.message);
-        }
     },
     /**
      * Given the turn that was just completed, begin the next turn
