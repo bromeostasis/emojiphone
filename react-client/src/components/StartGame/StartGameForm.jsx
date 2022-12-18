@@ -54,9 +54,11 @@ function StartGameForm() {
 			<Col>
 				<Form noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 					<Row className='gameForm pt-4 pb-4'>
-					  	<Row>
-					  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
+					  	<Row className='pt-1 yourInfo pb-3'>
+					  		<Row><p>Your info:</p></Row>
+					  		<PlayerInput errors={errors} register={register} />
 					  	</Row>
+					  	<p className='mb-0'>Your friends' info:</p>
 					    {fields.map((item, index) => (
 					      <Row className='pt-3' key={item.id}>
 					      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
@@ -116,7 +118,7 @@ function PlayerInput(props) {
 			    	{...register(`${namePrefix}phoneNumber`, {
 			    		validate: v => phone(v, "USA").length !== 0 || 'Invalid US phone number'
 			    	})} 
-			    	placeholder={`${placeholderPrefix}Number*`}
+			    	placeholder={`${placeholderPrefix}Phone*`}
 			    	isInvalid={!!errors?.phoneNumber}
 			    	type='tel'
 			    />
