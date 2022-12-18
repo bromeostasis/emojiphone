@@ -118,12 +118,12 @@ function PlayerInput(props) {
 			    	})} 
 			    	placeholder={`${placeholderPrefix}Number*`}
 			    	isInvalid={!!errors?.phoneNumber}
+			    	type='tel'
 			    />
 	  			<Feedback type='invalid'>{errors?.phoneNumber?.message}</Feedback>
 	  		</Group>
 		</>
 	)
-
 }
 
 export default StartGameForm;

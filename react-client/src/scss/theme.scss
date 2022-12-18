@@ -145,6 +145,7 @@ a {
 	overflow: hidden;
 	white-space: normal;
 	font-size: 3vw!important;
+	height: fit-content;
 	@media (min-width: 1200px) { 
 		font-size: 1vw;
 	}
