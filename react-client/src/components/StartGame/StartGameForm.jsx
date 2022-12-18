@@ -50,14 +50,14 @@ function StartGameForm() {
 					  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
 					  	</Row>
 					    {fields.map((item, index) => (
-					      <Row key={item.id}>
+					      <Row className='pt-3' key={item.id}>
 					      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
 					      	<Col xs={1} className='d-flex justify-content-center'>
 						        <Button 
 						        	variant='link'
 						        	type="button"
 						        	onClick={() => remove(index)}
-						        	className='ps-0'
+						        	className='ps-0 pe-4 removePlayerLink'
 						        >
 						        	⛔️
 						        </Button>
@@ -65,12 +65,15 @@ function StartGameForm() {
 					      </Row>
 					    ))}
 		  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
-
-					  <a
-					    href='#' onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
-					  >
-					    add more ➕
-					  </a>
+		  				<Row><Col xs={2}>
+							<Button
+								variant='link'
+								onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
+								className='ps-0'
+							>
+								add more ➕
+							</Button>
+						</Col></Row>
 					</Row>
 					<Row className='pt-3'>
 						<Col xs={{span: 6, offset: 3}} className='d-flex justify-content-center'>

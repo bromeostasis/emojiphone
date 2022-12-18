@@ -67,6 +67,27 @@ h3 {
 	}
 }
 
+input.form-control {
+	border-radius: 0px!important;
+	background-color: $amethyst;
+	border-color: $amethyst;
+	color: $inputGrey;
+	font-family: generalSans;
+	font-weight: 600;
+	&:focus {
+		// border: 1px solid #ced4da; // Default
+		box-shadow: none;
+		color: $inputGrey;
+		background-color: $amethyst;
+
+	}
+	&::placeholder {
+		color: $inputGrey;
+		font-family: generalSans;
+		font-weight: 600;
+	}
+}
+
 a {
 	text-decoration: none;
 	color: white;
@@ -88,24 +109,41 @@ a {
 	}
 }
 
-input.form-control {
-	border-radius: 0px!important;
-	background-color: $amethyst;
-	border-color: $amethyst;
-	color: $inputGrey;
-	font-family: generalSans;
-	font-weight: 600;
-	&:focus {
-		// border: 1px solid #ced4da; // Default
-		box-shadow: none;
-		color: $inputGrey;
-		background-color: $amethyst;
 
+.btn-link {
+	text-decoration: none;
+	color: white;
+	font-weight: 800;
+	// overflow: auto;
+	// white-space: nowrap;
+	// font-size: 4vw;
+	font-family: generalSans!important;
+	@media (min-width: 1200px) { 
+		font-size: 2.5vw;
 	}
-	&::placeholder {
-		color: $inputGrey;
-		font-family: generalSans;
-		font-weight: 600;
+	@media (min-width: 1400px) {
+		font-size: 1.5vw;
+	}
+	&:hover {
+		color: $tangerine;
+	}
+	&:active {
+		color: $tangerine!important;
+	}
+}
+
+.removePlayerLink {
+	overflow: hidden;
+	white-space: normal;
+	font-size: 3vw!important;
+	@media (min-width: 1200px) { 
+		font-size: 1vw;
+	}
+	@media (min-width: 1400px) {
+		font-size: 0.5vw;
+	}
+	&::-webkit-scrollbar {
+	  display: none;
 	}
 }
 
@@ -150,17 +188,6 @@ input.form-control {
 	&:active {
 		background-color: $capri!important;
 		border-color: $capri!important;
-	}
-}
-
-.btn-link {
-	text-decoration: none;
-	font-size: 3vw;
-	@media (min-width: 1200px) { 
-		font-size: 1vw;
-	}
-	@media (min-width: 1400px) {
-		font-size: 0.5vw;
 	}
 }
 
