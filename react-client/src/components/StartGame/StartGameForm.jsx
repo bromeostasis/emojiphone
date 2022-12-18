@@ -42,35 +42,41 @@ function StartGameForm() {
 	}
   
 	return (
-		<Row className='gameForm'>
+		<Row className='pt-3'>
 			<Col>
 				<Form noValidate validated={Object.keys(errors).length > 0} onSubmit={handleSubmit(async (data) => await submitForm(data))}>
-				  	<Row>
-				  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
-				  	</Row>
-				    {fields.map((item, index) => (
-				      <Row key={item.id}>
-				      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
-				      	<Col xs={1} className='d-flex justify-content-center'>
-					        <Button 
-					        	variant='link'
-					        	type="button"
-					        	onClick={() => remove(index)}
-					        	className='pt-0 pb-0'
-					        >
-					        	⛔️
-					        </Button>
-				      	</Col>
-				      </Row>
-				    ))}
-	  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
+					<Row className='gameForm pt-4 pb-4'>
+					  	<Row>
+					  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
+					  	</Row>
+					    {fields.map((item, index) => (
+					      <Row key={item.id}>
+					      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />
+					      	<Col xs={1} className='d-flex justify-content-center'>
+						        <Button 
+						        	variant='link'
+						        	type="button"
+						        	onClick={() => remove(index)}
+						        	className='ps-0'
+						        >
+						        	⛔️
+						        </Button>
+					      	</Col>
+					      </Row>
+					    ))}
+		  				{errors.players && errors.players.root && <span>{errors.players.root.message}</span>}
 
-				  <Button
-				    onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
-				  >
-				    append
-				  </Button>
-				  <input type="submit" />
+					  <a
+					    href='#' onClick={() => append({ firstName: "", lastName: "", phoneNumber: null })}
+					  >
+					    add more ➕
+					  </a>
+					</Row>
+					<Row className='pt-3'>
+						<Col xs={{span: 6, offset: 3}} className='d-flex justify-content-center'>
+					  		<Button type="submit" > ⚡️ let's go ⚡️ </Button>
+					  	</Col>
+					</Row>
 				</Form>
 			</Col>
 		</Row>
@@ -81,20 +87,20 @@ function PlayerInput(props) {
 	const { errors, register, namePrefix= '', placeholderPrefix = '' } = props
 	return (
 		<>
-			<Col xs={4}>
+			<Col xs={4} className='pe-0'>
 				<Form.Group controlId={`${namePrefix}firstName`}>
-				    <Form.Control {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name`} />
+				    <Form.Control {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name*`} />
 		  			{errors?.firstName && <Form.Control.Feedback>{errors?.firstName.message}</Form.Control.Feedback>}
 				</Form.Group>
 			</Col>
-			<Col xs={4}>
-		    	<Form.Control {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name (Optional)`}/>
+			<Col xs={4} className='pe-0 ps-0'>
+		    	<Form.Control {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name`}/>
 			</Col>
-			<Col xs={3}>
+			<Col xs={3} className='ps-0 pe-0'>
 				<Form.Group controlId={`${namePrefix}phoneNumber`}>
 				    <Form.Control {...register(`${namePrefix}phoneNumber`, {
 				    	validate: v => phone(v, "USA").length !== 0 || 'Please enter a valid US phone number'
-				    })} placeholder={`${placeholderPrefix}Phone Number`}/>
+				    })} placeholder={`${placeholderPrefix}Number*`}/>
 		  			{errors?.phoneNumber && <span>{errors?.phoneNumber.message}</span>}
 	  		</Form.Group>
 			</Col>

@@ -5,6 +5,7 @@ $amethyst: #9B5DE5;
 $tangerine: #F8924F;
 $yellow: #FEDD0B;
 $capri: #00BBF9;
+$inputGrey: #D9D9D9;
 
 // Default variable overrides
 $body-bg: $amethyst;
@@ -87,6 +88,27 @@ a {
 	}
 }
 
+input.form-control {
+	border-radius: 0px!important;
+	background-color: $amethyst;
+	border-color: $amethyst;
+	color: $inputGrey;
+	font-family: generalSans;
+	font-weight: 600;
+	&:focus {
+		// border: 1px solid #ced4da; // Default
+		box-shadow: none;
+		color: $inputGrey;
+		background-color: $amethyst;
+
+	}
+	&::placeholder {
+		color: $inputGrey;
+		font-family: generalSans;
+		font-weight: 600;
+	}
+}
+
 .spacer {
 	padding: 2rem 0;
 	p {
@@ -133,9 +155,9 @@ a {
 
 .btn-link {
 	text-decoration: none;
-	font-size: 2.5vw;
+	font-size: 3vw;
 	@media (min-width: 1200px) { 
-		font-size: 0.5vw;
+		font-size: 1vw;
 	}
 	@media (min-width: 1400px) {
 		font-size: 0.5vw;
@@ -154,6 +176,10 @@ a {
 .content-end {
 	justify-content: end;
 	padding-right: 0;
+}
+
+.gameForm {
+	background-color: $capri;
 }
 
 
