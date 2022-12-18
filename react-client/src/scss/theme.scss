@@ -71,13 +71,13 @@ input.form-control {
 	border-radius: 0px!important;
 	background-color: $amethyst;
 	border-color: $amethyst;
-	color: $inputGrey;
+	color: white;
 	font-family: generalSans;
 	font-weight: 600;
 	&:focus {
 		// border: 1px solid #ced4da; // Default
+		color: white;
 		box-shadow: none;
-		color: $inputGrey;
 		background-color: $amethyst;
 
 	}
