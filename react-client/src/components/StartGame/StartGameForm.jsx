@@ -6,20 +6,28 @@ import Row from 'react-bootstrap/Row';
 
 const phone = require("phone");
 
-
+const emptyPlayer = {firstName: '', lastName: '', phoneNumber: ''}
 
 function StartGameForm() {
 	const { register, clearErrors, control, handleSubmit, setError, formState: { errors }  } = useForm({
-		
+		defaultValues: {
+			...emptyPlayer,
+			players: [
+				emptyPlayer,
+				emptyPlayer,
+				emptyPlayer,
+				emptyPlayer
+			]
+		}
 	});
 	const { fields, append, remove } = useFieldArray({
 		control,
 		rules: {
 			minLength: {
-				value: 1,
-				message: 'Please enter at least two players'
+				value: 4,
+				message: 'Please add at least four other players'
 			}, // TODO: Constant
-			required: 'Please enter at least two players',
+			required: 'Please add at least four other players',
 		},
 		name: "players"
 	});
