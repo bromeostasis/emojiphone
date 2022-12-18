@@ -102,9 +102,9 @@ function PlayerInput(props) {
 			<Col xs={3} className='ps-0 pe-0'>
 				<Form.Group controlId={`${namePrefix}phoneNumber`}>
 				    <Form.Control {...register(`${namePrefix}phoneNumber`, {
-				    	validate: v => phone(v, "USA").length !== 0 || 'Please enter a valid US phone number'
+				    	validate: v => phone(v, "USA").length !== 0 || 'Invalid US phone number'
 				    })} placeholder={`${placeholderPrefix}Number*`}/>
-		  			{errors?.phoneNumber && <span>{errors?.phoneNumber.message}</span>}
+		  			{errors?.phoneNumber && <Form.Control.Feedback>{errors?.phoneNumber.message}</Form.Control.Feedback>}
 	  		</Form.Group>
 			</Col>
 		</>
