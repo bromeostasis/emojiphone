@@ -52,7 +52,7 @@ function StartGameForm() {
 	return (
 		<Row className='pt-3'>
 			<Col>
-				<Form noValidate validated={Object.keys(errors).length > 0} onSubmit={handleSubmit(async (data) => await submitForm(data))}>
+				<Form noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 					<Row className='gameForm pt-4 pb-4'>
 					  	<Row>
 					  		<PlayerInput errors={errors} register={register} placeholderPrefix='YOUR ' />
@@ -96,25 +96,31 @@ function StartGameForm() {
 
 function PlayerInput(props) {
 	const { errors, register, namePrefix= '', placeholderPrefix = '' } = props
+	const { Group, Control } = Form
+	const { Feedback } = Control
 	return (
 		<>
-			<Col xs={4} className='pe-0'>
-				<Form.Group controlId={`${namePrefix}firstName`}>
-				    <Form.Control {...register(`${namePrefix}firstName`, {required: 'First name required'})} placeholder={`${placeholderPrefix}First Name*`} />
-		  			{errors?.firstName && <Form.Control.Feedback>{errors?.firstName.message}</Form.Control.Feedback>}
-				</Form.Group>
-			</Col>
-			<Col xs={4} className='pe-0 ps-0'>
-		    	<Form.Control {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name`}/>
-			</Col>
-			<Col xs={3} className='ps-0 pe-0'>
-				<Form.Group controlId={`${namePrefix}phoneNumber`}>
-				    <Form.Control {...register(`${namePrefix}phoneNumber`, {
-				    	validate: v => phone(v, "USA").length !== 0 || 'Invalid US phone number'
-				    })} placeholder={`${placeholderPrefix}Number*`}/>
-		  			{errors?.phoneNumber && <Form.Control.Feedback>{errors?.phoneNumber.message}</Form.Control.Feedback>}
-	  		</Form.Group>
-			</Col>
+			<Group as={Col} xs={4} controlId={`${namePrefix}firstName`} className='pe-0'>
+			    <Control 
+			    	{...register(`${namePrefix}firstName`, {required: 'First name required'})}
+			    	placeholder={`${placeholderPrefix}First Name*`} 
+			    	isInvalid={!!errors?.firstName}
+			    />
+	  			<Feedback type='invalid'>{errors?.firstName?.message}</Feedback>
+			</Group>
+			<Group as={Col} xs={4} controlId={`${namePrefix}lastName`} className='pe-0 ps-0'>
+		    	<Control {...register(`${namePrefix}lastName`)} placeholder={`${placeholderPrefix}Last Name`}/>
+			</Group>
+			<Group as={Col} xs={3} controlId={`${namePrefix}phoneNumber`} className='ps-0'>
+			    <Control
+			    	{...register(`${namePrefix}phoneNumber`, {
+			    		validate: v => phone(v, "USA").length !== 0 || 'Invalid US phone number'
+			    	})} 
+			    	placeholder={`${placeholderPrefix}Number*`}
+			    	isInvalid={!!errors?.phoneNumber}
+			    />
+	  			<Feedback type='invalid'>{errors?.phoneNumber?.message}</Feedback>
+	  		</Group>
 		</>
 	)
 

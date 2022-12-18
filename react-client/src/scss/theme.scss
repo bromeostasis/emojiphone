@@ -86,6 +86,15 @@ input.form-control {
 		font-family: generalSans;
 		font-weight: 600;
 	}
+	&.is-invalid {
+		border-color: $yellow;
+		background-image: none; // Don't use image I can't re-color
+		padding: 0.375rem 0.75rem;
+		&:focus {
+			box-shadow: none;
+			border-color: $yellow;
+		}
+	}
 }
 
 a {
@@ -209,7 +218,7 @@ a {
 	background-color: $capri;
 }
 
-.valid-feedback {
+.invalid-feedback {
 	color: $yellow;
 }
 
