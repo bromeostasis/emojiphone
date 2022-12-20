@@ -146,11 +146,14 @@ a {
 	white-space: normal;
 	font-size: 3vw!important;
 	height: fit-content;
+	@media (min-width: 800px) {
+		font-size: 2vw!important;
+	}
 	@media (min-width: 1200px) { 
-		font-size: 1vw;
+		font-size: 1.5vw!important;
 	}
 	@media (min-width: 1400px) {
-		font-size: 0.5vw;
+		font-size: 1.2vw!important;
 	}
 	&::-webkit-scrollbar {
 	  display: none;
@@ -203,6 +206,7 @@ a {
 
 .container {
 	padding-top: 1rem;
+	padding-bottom: 1rem;
 }
 
 .center {
@@ -222,11 +226,6 @@ a {
 .invalid-feedback {
 	color: $yellow;
 }
-
-.yourInfo {
-	// background-color: $tangerine;
-}
-
 
 // Required
 @import "../../node_modules/bootstrap/scss/variables";
