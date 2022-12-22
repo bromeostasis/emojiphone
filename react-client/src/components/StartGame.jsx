@@ -6,7 +6,7 @@ import StartGameForm from './StartGame/StartGameForm'
 function StartGame() {
 	return (
 		<>
-			<Row>
+			<Row id='play'>
 				<Col className='d-flex justify-content-center'>
 					<h3>🎉 get the party started 🎉</h3>
 				</Col>
