@@ -58,10 +58,10 @@ module.exports = {
     },
     sendEndGameMessages: async (gameId) => {
         let turnsWithUsers = await gameUtils.getUsersViaTurnByGameId(gameId)
-        const endGameMessage = module.exports.getEndGameMessage(gameId)
 
         for (let turnWithUser of turnsWithUsers) {
             try {
+                const endGameMessage = module.exports.getEndGameMessage(gameId, turnWithUser.user.id)
                 await utils.bot.startConversationWithUser(turnWithUser.user.phoneNumber)
                 await utils.bot.say(endGameMessage)
             }
@@ -70,11 +70,11 @@ module.exports = {
             };
         }
     },
-    getEndGameMessage: (gameId) => {
+    getEndGameMessage: (gameId, userId) => {
         return `Your game of ${GAME_NAME} has completed! To see the results and start a group message to discuss your game, just click one of the following links!
 
-Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}
-iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}
+Android: ${process.env.SERVER_URL}/mmsLink/android/${gameId}?userId=${userId}
+iOS: ${process.env.SERVER_URL}/mmsLink/ios/${gameId}?userId=${userId}
 
 If you'd like to restart your latest game, simply send a message to this number with the word "${KEYWORDS.RESTART_KEYWORD}".`
     },
@@ -90,7 +90,7 @@ If you'd like to restart your latest game, simply send a message to this number 
                 include: [
                     {
                         model: models.user, as: "user",
-                        attributes: ['firstName', 'lastName', 'phoneNumber']
+                        attributes: ['firstName', 'lastName', 'phoneNumber', 'id']
                     }
                 ],
                 order: [

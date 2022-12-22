@@ -2,10 +2,8 @@ const turnUtils = require("./turn_utils");
 const { GAME_NAME } = require('../utils/constants')
 
 module.exports = {
-    makeMmsUrl: async (gameId, platform) => {
-        let isGroupMessage = true;
-
-        let messageAndPhoneNumbers = await module.exports.getGameSummary(gameId);
+    makeMmsUrl: async (gameId, platform, userId) => {
+        let messageAndPhoneNumbers = await module.exports.getGameSummary(gameId, userId);
         let phoneString = messageAndPhoneNumbers.phoneNumbers.join(',');
 
         let url = "sms://"
@@ -29,7 +27,7 @@ module.exports = {
     * @returns {string} phoneNumbersAndMessage.message  Message that needs to be sent
     * }
     */
-    getGameSummary: async (gameId) => {
+    getGameSummary: async (gameId, userId) => {
         let usersAndMessages = await turnUtils.getUsersAndMessagesFromGameId(gameId);
 
 
@@ -40,7 +38,9 @@ module.exports = {
 
         for (let userMessage of usersAndMessages) {
             let user = userMessage.user;
-            phoneNumbers.push(user.phoneNumber);
+            if (parseInt(userId) !== user.id) {
+                phoneNumbers.push(user.phoneNumber);
+            }
             let name = user.firstName;
             name += (user.lastName) ? " " + user.lastName : "";
             
