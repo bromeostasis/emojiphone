@@ -2,6 +2,17 @@ const setupUtils = require('../utils/setup_utils');
 const phone = require("phone");
 
 module.exports = {
+	/**
+    * Create a game using data from the api (frontend)
+    * @param  {Object} body  Request body from frontend
+    * @param  {string} body.firstName  First name of the player initiating the game
+    * @param  {string} body.lastName  Last name of the player initiating the game
+    * @param  {string} body.phoneNumber  Phone number of the player initiating the game
+    * @param  {Object[]} body.players  Array of players included in the game. Should be enough to start a game
+    * @param  {string} body.players[n].firstName  First name of the nth player to be added
+    * @param  {string} body.players[n].lastName  Last name of the nth player to be added
+    * @param  {string} body.players[n].phoneNumber  Phone number of the nth player to be added
+    */
 	startGame: async (body) => {
 		// TODO Validation library?
 		if (!body || !body.firstName || !body.phoneNumber ) {

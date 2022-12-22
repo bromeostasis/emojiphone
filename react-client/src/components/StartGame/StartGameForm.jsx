@@ -8,6 +8,9 @@ const phone = require("phone");
 
 const emptyPlayer = {firstName: '', lastName: '', phoneNumber: ''}
 
+const MINIMUM_OTHER_PLAYERS = {text: 'four', number: 4} // TODO: Pull constant to shared between BE/FE
+const MINIMUM_OTHER_PLAYERS_MESSAGE = `Please add at least ${MINIMUM_OTHER_PLAYERS.text} other players`
+
 function StartGameForm() {
 	const { register, clearErrors, control, handleSubmit, setError, formState: { errors }  } = useForm({
 		defaultValues: {
@@ -24,10 +27,10 @@ function StartGameForm() {
 		control,
 		rules: {
 			minLength: {
-				value: 4,
-				message: 'Please add at least four other players'
-			}, // TODO: Constant
-			required: 'Please add at least four other players',
+				value: MINIMUM_OTHER_PLAYERS.number,
+				message: MINIMUM_OTHER_PLAYERS_MESSAGE
+			},
+			required: MINIMUM_OTHER_PLAYERS_MESSAGE,
 		},
 		name: "players"
 	});
@@ -52,13 +55,13 @@ function StartGameForm() {
 	return (
 		<Row className='pt-3'>
 			<Col>
-				<Form noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
+				<Form autocomplete='off' noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 					<Row className='gameForm pt-4 pb-4'>
 					  	<Row className='pt-1 yourInfo pb-3'>
 					  		<Row><p>Your info:</p></Row>
 					  		<PlayerInput errors={errors} register={register} />
 					  	</Row>
-					  	<p className='mb-0'>Your friends' info:</p>
+					  	<Row><p className='mb-0'>Your friends' info:</p></Row>
 					    {fields.map((item, index) => (
 					      <Row className='pt-3' key={item.id}>
 					      	<PlayerInput errors={errors?.players?.[index]} register={register} namePrefix={`players.${index}.`} />

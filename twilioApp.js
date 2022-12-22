@@ -100,7 +100,6 @@ module.exports = {
         })
 
         utils.controller.webserver.post('/startGame', async(req, res) => {
-            console.log(req.body)
             const { status, response } = await services.startGame(req.body)
             console.log(status, response)
             res.status(status).send(response)

@@ -185,7 +185,6 @@ Learn more here: TODO`
         
     },
     createUser: async (user) => {
-        // TODO: needsOnboarding?
         const returnedUsers = await models.user.upsert(user, {returning: true}).catch(err => {
             console.log(err);
             throw err;

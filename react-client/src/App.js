@@ -37,7 +37,7 @@ function App() {
         <ButHow />
         <EmojiSpacer />
         <StartGame />
-        {/*Backend's working? {message}*/}
+        Backend's working? {message}
       </Container>
     </div>
   );

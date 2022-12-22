@@ -67,6 +67,14 @@ h3 {
 	}
 }
 
+input:-internal-autofill-selected {
+	color: $amethyst!important;
+}
+
+input:-internal-autofill-selected:focus {
+	color: $amethyst!important;
+}
+
 input.form-control {
 	border-radius: 0px!important;
 	background-color: $amethyst;
@@ -75,11 +83,9 @@ input.form-control {
 	font-family: generalSans;
 	font-weight: 600;
 	&:focus {
-		// border: 1px solid #ced4da; // Default
 		color: white;
 		box-shadow: none;
 		background-color: $amethyst;
-
 	}
 	&::placeholder {
 		color: $inputGrey;
@@ -123,9 +129,6 @@ a {
 	text-decoration: none;
 	color: white;
 	font-weight: 800;
-	// overflow: auto;
-	// white-space: nowrap;
-	// font-size: 4vw;
 	font-family: generalSans!important;
 	@media (min-width: 1200px) { 
 		font-size: 2.5vw;
