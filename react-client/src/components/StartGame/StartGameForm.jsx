@@ -11,17 +11,17 @@ const emptyPlayer = {firstName: '', lastName: '', phoneNumber: ''}
 const MINIMUM_OTHER_PLAYERS = {text: 'four', number: 4} // TODO: Pull constant to shared between BE/FE
 const MINIMUM_OTHER_PLAYERS_MESSAGE = `Please add at least ${MINIMUM_OTHER_PLAYERS.text} other players`
 
+const defaultValues = {
+	...emptyPlayer,
+	players: [],
+}
+for (let i = 0; i < MINIMUM_OTHER_PLAYERS.number; i++) {
+	defaultValues.players.push(emptyPlayer);
+}
+
 function StartGameForm() {
 	const { register, clearErrors, control, handleSubmit, setError, formState: { errors }  } = useForm({
-		defaultValues: {
-			...emptyPlayer,
-			players: [
-				emptyPlayer,
-				emptyPlayer,
-				emptyPlayer,
-				emptyPlayer
-			]
-		}
+		defaultValues
 	});
 	const { fields, append, remove } = useFieldArray({
 		control,
