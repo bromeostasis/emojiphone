@@ -1,5 +1,5 @@
 
-const GAME_NAME = 'MojiPhone'
+const GAME_NAME = 'mojiphone'
 
 const KEYWORDS = {
     CANCEL_KEYWORD: 'cancel',
@@ -18,6 +18,8 @@ const PHRASES = {
     UNSUBSCRIBE_PHRASE: `Text "${KEYWORDS.UNSUBSCRIBE_KEWYORD}" to stop receiving all texts from this number.`,
 	NOT_IN_GAME_PHRASE: `You are not currently playing in a game!`
 }
+
+PHRASES['START_GAME_FROM_WEB_PHRASE'] = `You have successfully started a game of ${GAME_NAME}! ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`
 
 module.exports = {
 	GAME_NAME,

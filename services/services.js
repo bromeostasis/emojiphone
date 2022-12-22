@@ -1,4 +1,6 @@
+const { PHRASES } = require('../utils/constants');
 const setupUtils = require('../utils/setup_utils');
+const utils = require('../utils/utils');
 const phone = require("phone");
 
 module.exports = {
@@ -57,6 +59,9 @@ module.exports = {
 		if (response?.status === 500) { // TODO: Better error codes / handling?
 			return response
 		}
+
+		await utils.bot.startConversationWithUser(phoneNumber);
+		await utils.bot.say(PHRASES.START_GAME_FROM_WEB_PHRASE)
 
 		return { status: 200, response: {
 			message: 'Game successfully created'
