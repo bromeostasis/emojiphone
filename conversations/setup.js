@@ -167,11 +167,7 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
                             if (setupUtils.containsPhoneNumber(users, user.phoneNumber)) {
                                 await inConvo.gotoThread(DUPLICATE_NUMBER_THREAD);
                             } else {
-                                user = await models.user.upsert(user, {returning: true}).catch(err => {
-                                    console.log(err);
-                                    throw err;
-                                })
-                                user = user[0]
+                                user = await setupUtils.createUser(user)
                                 const isInActiveGame = await setupUtils.isUserInActiveGame(user)
                                 if (isInActiveGame) {
                                     return await inConvo.gotoThread(ALREADY_ACTIVE_THREAD)

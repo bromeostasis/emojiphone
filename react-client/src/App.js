@@ -1,13 +1,14 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import { useCallback, useEffect, useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './scss/theme.scss';
+
 import Container from 'react-bootstrap/Container';
 
 import ButHow from './components/ButHow'
 import EmojiSpacer from './components/EmojiSpacer'
 import HeroText from './components/HeroText'
 import NavBar from './components/NavBar'
-import logo from './logo.svg';
-import './scss/theme.scss';
+import StartGame from './components/StartGame'
 
 function App() {
   const [message, setMessage] = useState('')
@@ -35,6 +36,7 @@ function App() {
         <EmojiSpacer />
         <ButHow />
         <EmojiSpacer />
+        <StartGame />
         Backend's working? {message}
       </Container>
     </div>
