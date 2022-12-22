@@ -67,12 +67,9 @@ h3 {
 	}
 }
 
-input:-internal-autofill-selected {
-	color: $amethyst!important;
-}
-
-input:-internal-autofill-selected:focus {
-	color: $amethyst!important;
+// https://stackoverflow.com/a/68240841
+input:-webkit-autofill, input:-webkit-autofill:focus {
+	transition: background-color 600000s 0s, color 600000s 0s;
 }
 
 input.form-control {
