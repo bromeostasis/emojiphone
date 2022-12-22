@@ -1,8 +1,11 @@
 import { useForm, useFieldArray } from "react-hook-form";
+import { ToastContainer, toast } from 'react-toastify';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
+
+import 'react-toastify/dist/ReactToastify.css';
 
 const phone = require("phone");
 
@@ -20,7 +23,7 @@ for (let i = 0; i < MINIMUM_OTHER_PLAYERS.number; i++) {
 }
 
 function StartGameForm() {
-	const { register, clearErrors, control, handleSubmit, setError, formState: { errors }  } = useForm({
+	const { register, clearErrors, control, handleSubmit, reset, setError, formState: { errors }  } = useForm({
 		defaultValues
 	});
 	const { fields, append, remove } = useFieldArray({
@@ -48,8 +51,9 @@ function StartGameForm() {
 			setError('players.root', { type: 'custom', message: body.message }) 
 		} else {
 			clearErrors('players.root')
+			toast('Game successfully created! You will receive a text as confirmation.', {position: "bottom-left"})
+			reset();
 		}
-
 	}
   
 	return (
@@ -95,6 +99,7 @@ function StartGameForm() {
 					</Row>
 				</Form>
 			</Col>
+			<ToastContainer />
 		</Row>
 	)
 }
