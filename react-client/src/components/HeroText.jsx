@@ -15,11 +15,9 @@ const HeroText = () => {
 	    </Col>
 	  </Row>
 	  <Row>
-	    <Col xs={3}></Col>
-	    <Col xs={6} className='d-flex justify-content-center'>
-	      <Button>⚡️play now⚡️</Button>
+	    <Col xs={{span: 6, offset: 3}} className='d-flex justify-content-center'>
+	      <Button onClick={() => window.location = '#play'}>⚡️play now⚡️</Button>
 	    </Col>
-	    <Col xs={3}></Col>
 	  </Row>
 	 </>
   )

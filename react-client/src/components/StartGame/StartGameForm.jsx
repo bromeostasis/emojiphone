@@ -59,7 +59,7 @@ function StartGameForm() {
 	return (
 		<Row className='pt-3'>
 			<Col>
-				<Form autocomplete='off' noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
+				<Form noValidate onSubmit={handleSubmit(async (data) => await submitForm(data))}>
 					<Row className='gameForm pt-4 pb-4'>
 					  	<Row className='pt-1 yourInfo pb-3'>
 					  		<Row><p>Your info:</p></Row>

@@ -33,6 +33,7 @@ module.exports = {
 
 		const { firstName, lastName, phoneNumber } = body
 
+		// TODO: needsOnboarding: false?
 		const creatingUser = await setupUtils.createUser({
 			firstName,
 			lastName,
