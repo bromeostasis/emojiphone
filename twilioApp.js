@@ -89,10 +89,7 @@ module.exports = {
             if (acceptablePlatforms.indexOf(platform) == -1) {
                 return res.status(400).send("Platform must be 'ios' or 'android'");
             }
-            if (!req || !req.query || !req.query.userId) {
-                return res.status(400).send('userId query parameter required')
-            }
-            let url = await mmsUtils.makeMmsUrl(req.params.gameId, platform, req.query.userId);
+            let url = await mmsUtils.makeMmsUrl(req.params.gameId, platform, req?.query?.userId);
             res.set('location', url);
             res.status(301).send()
             
