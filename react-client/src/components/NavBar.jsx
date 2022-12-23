@@ -7,8 +7,8 @@ const NavBar = (props) => {
   return (
     <Row>
     	<Col className='center' xs={6}>
-    	  <h2>
-	    	  mojiph😌ne
+    	  <h2 className='logo'>
+	    	  mojiph<span className='moj'></span>ne
     	  </h2>
     	 </Col>
     	 <Col className='center content-end' xs={3}>

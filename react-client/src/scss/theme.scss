@@ -227,6 +227,26 @@ a {
 	color: $yellow;
 }
 
+@keyframes animate {
+    0% {
+        content: "😌";
+    }
+
+    33% {
+        content: "🧠";
+    }
+
+    66% {
+        content: "🫶";
+    }
+}
+
+.moj::before {
+    content: "😌";
+    animation: animate infinite 3s;
+}
+
+
 // Required
 @import "../../node_modules/bootstrap/scss/variables";
 @import "../../node_modules/bootstrap/scss/maps";
