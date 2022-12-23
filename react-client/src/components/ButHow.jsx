@@ -1,5 +1,6 @@
 import React from 'react';
 
+import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
@@ -38,12 +39,17 @@ const ButHow = (props) => {
 		<Col xs={6}></Col>
 	  </Row>
 	  <Row>
-		<Col xs={6}></Col>
+			<Col xs={6}></Col>
 	  	<Col xs={6}>
 	  		<p>
 	  			4. Everyone receives a transcript of the game when it's complete!
   			</p>
-		</Col>
+			</Col>
+	  </Row>
+	  <Row>
+	    <Col xs={{span: 6, offset: 3}} className='d-flex justify-content-center'>
+	      <Button onClick={() => window.location = '#play'}>⚡️play now⚡️</Button>
+	    </Col>
 	  </Row>
 	</>
   )
