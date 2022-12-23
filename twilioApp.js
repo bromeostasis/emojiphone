@@ -89,7 +89,7 @@ module.exports = {
             if (acceptablePlatforms.indexOf(platform) == -1) {
                 return res.status(400).send("Platform must be 'ios' or 'android'");
             }
-            let url = await mmsUtils.makeMmsUrl(req.params.gameId, platform);
+            let url = await mmsUtils.makeMmsUrl(req.params.gameId, platform, req?.query?.userId);
             res.set('location', url);
             res.status(301).send()
             
@@ -101,7 +101,6 @@ module.exports = {
 
         utils.controller.webserver.post('/startGame', async(req, res) => {
             const { status, response } = await services.startGame(req.body)
-            console.log(status, response)
             res.status(status).send(response)
         })
 
