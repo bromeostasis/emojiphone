@@ -95,6 +95,11 @@ module.exports = {
             
         })
 
+        utils.controller.webserver.get('/feedback', async(req, res) => {
+            res.set('location', 'https://forms.gle/fMLsHXV6qBK7ya5y7')
+            res.status(301).send()  
+        })
+
         utils.controller.webserver.get('/test', async(req, res) => {
             res.status(200).send({express: 'test received'})
         })

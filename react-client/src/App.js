@@ -6,6 +6,7 @@ import Container from 'react-bootstrap/Container';
 
 import ButHow from './components/ButHow'
 import EmojiSpacer from './components/EmojiSpacer'
+import Feedback from './components/Feedback'
 import HeroText from './components/HeroText'
 import NavBar from './components/NavBar'
 import StartGame from './components/StartGame'
@@ -37,6 +38,8 @@ function App() {
         <ButHow />
         <EmojiSpacer />
         <StartGame />
+        <EmojiSpacer />
+        <Feedback />
         {/*Backend's working? {message}*/}
       </Container>
     </div>
