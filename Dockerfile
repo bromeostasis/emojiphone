@@ -16,5 +16,5 @@ RUN npm install
 COPY . .
 
 EXPOSE 3000
-# CMD [ "npm", "start" ]
-CMD ./scripts/start.sh
+# CMD ["NODE_ENV=staging", "npm", "start" ]
+CMD NODE_ENV=staging ./scripts/start.sh
