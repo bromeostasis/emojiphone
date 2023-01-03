@@ -46,7 +46,7 @@ h2 {
 	color: $yellow;
 	font-family: righteous;
 	margin-bottom: 0;
-	font-size: 7.5vw;
+	font-size: 8.25vw;
 	@media (min-width: 1200px) { 
 		font-size: 4.5vw;
 	}
@@ -58,7 +58,7 @@ h2 {
 h3 {
 	color: white;
 	font-family: righteous;
-	font-size: 6.5vw;
+	font-size: 7.5vw;
 	@media (min-width: 1200px) { 
 		font-size: 3.5vw;
 	}
@@ -160,6 +160,11 @@ a {
 	}
 }
 
+.inlineLink {
+	font-size: inherit;
+	color: $yellow;
+}
+
 .spacer {
 	padding: 2rem 0;
 	p {
@@ -190,6 +195,7 @@ a {
 }
 
 .btn-primary {
+	margin-top: 1rem;
 	background-color: $tangerine;
 	border-color: $tangerine;
 	border-radius: 0;

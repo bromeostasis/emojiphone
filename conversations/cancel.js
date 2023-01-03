@@ -34,7 +34,9 @@ module.exports = {
         }, ALREADY_CANCELED_THREAD);
         
         convo.addMessage({
-            text: `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_PHRASE} ${PHRASES.UNSUBSCRIBE_PHRASE}`,
+            text: `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_WEB_PHRASE} 
+
+${PHRASES.UNSUBSCRIBE_PHRASE}`,
             action: COMPLETE_ACTION
         }, NO_ACTIVE_GAMES_THREAD);
         

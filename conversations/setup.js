@@ -221,7 +221,7 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
         }, INVALID_NUMBER_THREAD);
         
         convo.addMessage({
-            text: `Ok, you will not start the game. ${PHRASES.START_PHRASE}`,
+            text: `Ok, you will not start the game. ${PHRASES.START_WEB_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
         convo.addMessage({
