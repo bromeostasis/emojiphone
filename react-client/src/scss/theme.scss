@@ -46,7 +46,7 @@ h2 {
 	color: $yellow;
 	font-family: righteous;
 	margin-bottom: 0;
-	font-size: 8.5vw;
+	font-size: 8.25vw;
 	@media (min-width: 1200px) { 
 		font-size: 4.5vw;
 	}
@@ -158,6 +158,11 @@ a {
 	&::-webkit-scrollbar {
 	  display: none;
 	}
+}
+
+.inlineLink {
+	font-size: inherit;
+	color: $yellow;
 }
 
 .spacer {

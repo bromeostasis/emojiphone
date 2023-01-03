@@ -3,7 +3,7 @@ import Row from 'react-bootstrap/Row';
 
 import StartGameForm from './StartGame/StartGameForm'
 
-const PHONE_NUMBER = '+12015848173'
+const PHONE_NUMBER = '+12015848173' // TODO: Env
 
 function StartGame() {
 	return (
@@ -13,12 +13,12 @@ function StartGame() {
 					<h3>🎉 start the party 🎉</h3>
 				</Col>
 			</Row>
-			<Row>
+			<Row className='mt-3'>
 				<Col>
 					<p>
 						To start your game of mojiphone, fill out the following form or text 
-						<a href={`sms:+${PHONE_NUMBER}?&body=new`}>
-							"new" to {PHONE_NUMBER}.
+						<a className='inlineLink' href={`sms:+${PHONE_NUMBER}?&body=new`}>
+							&nbsp; "new" to {PHONE_NUMBER}.
 						</a>
 					</p>
 				</Col>

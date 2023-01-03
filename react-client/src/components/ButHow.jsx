@@ -14,7 +14,7 @@ const ButHow = (props) => {
 	  	</Col>
 	  	<Col xs={2}></Col>
 	  </Row>
-	  <Row className='pt-3'>
+	  <Row className='mt-3'>
 	  	<Col xs={6}>
 	  		<p>
 	  			1. Pick at least four of your funniest contacts.

@@ -14,14 +14,14 @@ const Feedback = () => {
 	    </Col>
 	  </Row>
 	  <Row>
-	    <Col className='d-flex justify-content-center pt-3'>
+	    <Col className='d-flex justify-content-center mt-3'>
 	      <p>
 	      	We are currently in open beta and we could use all the feedback you've got! It will help make the mojiphone the best it can possibly be. Thanks in advance!
 	      </p>
 	    </Col>
 	  </Row>
 	  <Row>
-	    <Col className='d-flex justify-content-center pt-3'>
+	    <Col className='d-flex justify-content-center mt-3'>
 	      <a href='/feedback' target='_blank'>
 	      	🧠 let us know 🧠
 	      </a>
