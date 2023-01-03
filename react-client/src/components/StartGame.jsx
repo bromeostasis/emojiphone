@@ -17,8 +17,8 @@ function StartGame() {
 				<Col>
 					<p>
 						To start your game of mojiphone, fill out the following form or text 
-						<a className='inlineLink' href={`sms:+${PHONE_NUMBER}?&body=new`}>
-							&nbsp; "new" to {PHONE_NUMBER}.
+						<a className='inlineLink' href={`sms:+${process.env.REACT_APP_TWILIO_PHONE_NUMBER}?&body=new`}>
+							&nbsp; "new" to {process.env.REACT_APP_DISPLAY_PHONE_NUMBER}.
 						</a>
 					</p>
 				</Col>
