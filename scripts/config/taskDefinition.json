@@ -19,6 +19,10 @@
             "command": [],
             "environment": [
                 {
+                    "name": "ECS_AVAILABLE_LOGGING_DRIVERS",
+                    "value": "[\"json-file\",\"awslogs\"]"
+                },
+                {
                     "name": "NODE_ENV",
                     "value": "staging"
                 }
@@ -33,6 +37,16 @@
             "dockerSecurityOptions": [],
             "dockerLabels": {},
             "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/mojiphone-logging",
+                    "awslogs-region": "us-east-2",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
             "systemControls": []
         }
     ],
