@@ -61,6 +61,6 @@ const sendCancelledGameMessages = async (turns, cancellingUser) => {
         if (user.id !== cancellingUser.id) {
             cancelledByPhrase = ` by ${cancellingUser.firstName}`
         }
-        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! ${PHRASES.START_PHRASE}`)
+        await utils.bot.say(`Your game was cancelled${cancelledByPhrase}! ${PHRASES.START_WEB_PHRASE}`)
     }
 }

@@ -20,11 +20,9 @@ const ButHow = (props) => {
 	  			1. Pick at least four of your funniest contacts.
   			</p>
 		</Col>
-		<Col xs={6}></Col>
 	  </Row>
 	  <Row>
-		<Col xs={6}></Col>
-	  	<Col xs={6}>
+	  	<Col xs={{span: 6, offset: 6}}>
 	  		<p>
 	  			2. One lucky friend creates a fun prompt for the group.
   			</p>
@@ -36,17 +34,15 @@ const ButHow = (props) => {
 	  			3. When it's your turn, you'll translate the previous message between emoji-only and text-only.
   			</p>
 		</Col>
-		<Col xs={6}></Col>
 	  </Row>
 	  <Row>
-			<Col xs={6}></Col>
-	  	<Col xs={6}>
+	  	<Col xs={{span: 6, offset: 6}}>
 	  		<p>
 	  			4. Everyone receives a transcript of the game when it's complete!
   			</p>
 			</Col>
 	  </Row>
-	  <Row>
+	  <Row className='mt-2'>
 	    <Col xs={{span: 6, offset: 3}} className='d-flex justify-content-center'>
 	      <Button onClick={() => window.location = '#play'}>⚡️play now⚡️</Button>
 	    </Col>

@@ -11,7 +11,7 @@ module.exports = {
     	const currentGame = await gameUtils.getLatestGameByPhoneNumber(phoneNumber)
 
     	if (!currentGame) {
-    		return `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_PHRASE}`
+    		return `${PHRASES.NOT_IN_GAME_PHRASE} ${PHRASES.START_WEB_PHRASE}`
     	}
 
     	const currentTurn = await turnUtils.getCurrentTurn(currentGame.id)

@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/Row';
 const Feedback = () => {
   return (
   	<>
-	  <Row id='feedback' className='pt-3'>
+	  <Row id='feedback'>
 	    <Col className='d-flex justify-content-center'>
 	      <h3>
 	        🙇‍♂️ how's it going? 🙇‍♂️

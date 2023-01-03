@@ -14,6 +14,7 @@ const KEYWORDS = {
 const PHRASES = {
     CANCEL_PHRASE: `Text "${KEYWORDS.CANCEL_KEYWORD}" to ${KEYWORDS.CANCEL_KEYWORD} your game early.`,
 	START_PHRASE: `Text "${KEYWORDS.INITIATE_GAME_KEYWORD}" to start a new game!`,
+	START_WEB_PHRASE: `Text "${KEYWORDS.INITIATE_GAME_KEYWORD}" or visit ${process.env.SERVER_URL}/#play to start a new game!`,
     STATUS_PHRASE: `Text "${KEYWORDS.STATUS_KEYWORD}" for a status update on your game.`,
     UNSUBSCRIBE_PHRASE: `Text "${KEYWORDS.UNSUBSCRIBE_KEWYORD}" to stop receiving all texts from this number.`,
 	NOT_IN_GAME_PHRASE: `You are not currently playing in a game!`
