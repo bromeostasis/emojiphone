@@ -22,7 +22,7 @@ const Feedback = () => {
 	  </Row>
 	  <Row>
 	    <Col className='d-flex justify-content-center mt-3'>
-	      <a href='/feedback' target='_blank'>
+	      <a href='/feedback' target='_blank' className='inlineLink'>
 	      	🧠 let us know 🧠
 	      </a>
 	    </Col>
