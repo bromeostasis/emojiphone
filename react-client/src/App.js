@@ -41,9 +41,9 @@ function App() {
         <StartGame />
         <EmojiSpacer />
         <Feedback />
-        <FRANMAYO />
         {/*Backend's working? {message}*/}
       </Container>
+      <FRANMAYO />
     </div>
   );
 }
