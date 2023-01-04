@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import ButHow from './components/ButHow'
 import EmojiSpacer from './components/EmojiSpacer'
 import Feedback from './components/Feedback'
+import FRANMAYO from './components/FranMayo'
 import HeroText from './components/HeroText'
 import NavBar from './components/NavBar'
 import StartGame from './components/StartGame'
@@ -31,7 +32,7 @@ function App() {
 
   return (
     <div className="App">
-      <Container>
+      <Container className='pb-0'>
         <NavBar />
         <HeroText />
         <EmojiSpacer />
@@ -40,6 +41,7 @@ function App() {
         <StartGame />
         <EmojiSpacer />
         <Feedback />
+        <FRANMAYO />
         {/*Backend's working? {message}*/}
       </Container>
     </div>
