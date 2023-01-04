@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './scss/theme.scss';
 
@@ -14,6 +14,9 @@ import StartGame from './components/StartGame'
 
 function App() {
   const [message, setMessage] = useState('')
+  const howRef = useRef(null);
+  const playRef = useRef(null);
+  const feedbackRef = useRef(null);
 
   // fetching the GET route from the Express server which matches the GET route from server.js
   const callBackendAPI = useCallback(async () => {
@@ -28,6 +31,16 @@ function App() {
 
   useEffect(() => {
     callBackendAPI()
+    const url = window.location.href
+    if (url.includes('#how')) {
+      howRef.current.scrollIntoView();
+    }
+    if (url.includes('#play')) {
+      playRef.current.scrollIntoView();
+    }
+    if (url.includes('#feedback')) {
+      feedbackRef.current.scrollIntoView();
+    }
   }, [callBackendAPI])
 
   return (
@@ -36,11 +49,11 @@ function App() {
         <NavBar />
         <HeroText />
         <EmojiSpacer />
-        <ButHow />
+        <ButHow inputRef={howRef} />
         <EmojiSpacer />
-        <StartGame />
+        <StartGame inputRef={playRef} />
         <EmojiSpacer />
-        <Feedback />
+        <Feedback inputRef={feedbackRef} />
         {/*Backend's working? {message}*/}
       </Container>
       <FRANMAYO />

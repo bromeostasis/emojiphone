@@ -3,10 +3,10 @@ import React from 'react';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-const Feedback = () => {
+const Feedback = ({ inputRef }) => {
   return (
   	<>
-	  <Row id='feedback'>
+	  <Row id='feedback' ref={inputRef}>
 	    <Col className='d-flex justify-content-center'>
 	      <h3>
 	        🙇‍♂️ how's it going? 🙇‍♂️

@@ -3,10 +3,10 @@ import Row from 'react-bootstrap/Row';
 
 import StartGameForm from './StartGame/StartGameForm'
 
-function StartGame() {
+function StartGame({ inputRef }) {
 	return (
 		<>
-			<Row id='play'>
+			<Row id='play' ref={inputRef}>
 				<Col className='d-flex justify-content-center'>
 					<h3>🎉 start the party 🎉</h3>
 				</Col>

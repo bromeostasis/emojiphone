@@ -4,10 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 
-const ButHow = (props) => {
+const ButHow = ({ inputRef }) => {
   return (
   	<>
-	  <Row id='how'>
+	  <Row id='how' ref={inputRef}>
 	  	<Col xs={2}></Col>
 	  	<Col xs={8} className='d-flex justify-content-center'>
 	  	  <h3>🤔 but how 🤔</h3>
