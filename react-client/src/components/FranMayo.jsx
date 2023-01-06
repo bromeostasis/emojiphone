@@ -7,7 +7,7 @@ import Container from 'react-bootstrap/Container';
 const FRANMAYO = (props) => {
   return (
   	<Container className='fran mt-3 pt-3 pb-3' fluid>
-	    <Row >
+	    <Row>
 	    	<Col>
 	    		Website design by <a className='inlineLink' rel="noreferrer" href='https://www.fran.land/' target='_blank'>Fran</a>
 	    	</Col>
