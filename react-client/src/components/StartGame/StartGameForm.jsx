@@ -11,14 +11,18 @@ const phone = require("phone");
 
 const emptyPlayer = {firstName: '', lastName: '', phoneNumber: ''}
 
-const MINIMUM_OTHER_PLAYERS = {text: 'four', number: 4} // TODO: Pull constant to shared between BE/FE
-const MINIMUM_OTHER_PLAYERS_MESSAGE = `Please add at least ${MINIMUM_OTHER_PLAYERS.text} other players`
+let { REACT_APP_MINIMUM_PLAYER_COUNT_STRING, REACT_APP_MINIMUM_PLAYER_COUNT } = process.env // TODO: Pull constant to shared between BE/FE
+
+REACT_APP_MINIMUM_PLAYER_COUNT = parseInt(REACT_APP_MINIMUM_PLAYER_COUNT)
+
+const MINIMUM_OTHER_PLAYERS_MESSAGE = `Please add at least ${REACT_APP_MINIMUM_PLAYER_COUNT_STRING} other players`
 
 const defaultValues = {
 	...emptyPlayer,
 	players: [],
 }
-for (let i = 0; i < MINIMUM_OTHER_PLAYERS.number; i++) {
+
+for (let i = 0; i < REACT_APP_MINIMUM_PLAYER_COUNT; i++) {
 	defaultValues.players.push(emptyPlayer);
 }
 
@@ -30,7 +34,7 @@ function StartGameForm() {
 		control,
 		rules: {
 			minLength: {
-				value: MINIMUM_OTHER_PLAYERS.number,
+				value: REACT_APP_MINIMUM_PLAYER_COUNT,
 				message: MINIMUM_OTHER_PLAYERS_MESSAGE
 			},
 			required: MINIMUM_OTHER_PLAYERS_MESSAGE,

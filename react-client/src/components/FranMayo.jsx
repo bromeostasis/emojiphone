@@ -9,7 +9,7 @@ const FRANMAYO = (props) => {
   	<Container className='fran mt-3 pt-3 pb-3' fluid>
 	    <Row >
 	    	<Col>
-	    		Website design by <a className='inlineLink' href='https://www.fran.land/' target='_blank'>Fran</a>
+	    		Website design by <a className='inlineLink' rel="noreferrer" href='https://www.fran.land/' target='_blank'>Fran</a>
 	    	</Col>
 	    </Row>
 	</Container>
