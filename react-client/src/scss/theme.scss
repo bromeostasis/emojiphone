@@ -256,6 +256,19 @@ a {
 	background-color: $capri;
 }
 
+.playNav {
+	@media (min-width: 1200px) { 
+		justify-content: end;
+	}
+}
+
+.navText {
+	@media (min-width: 1200px) { 
+		justify-content: center;
+		text-align: center;
+	}	
+}
+
 
 // Required
 @import "../../node_modules/bootstrap/scss/variables";

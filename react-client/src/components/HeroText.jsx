@@ -7,7 +7,7 @@ import Row from 'react-bootstrap/Row';
 const HeroText = () => {
   return (
   	<>
-	  <Row className='mt-3'>
+	  <Row className='mt-3 content-end navText'>
 	    <Col>
 	      <p>
 	        It's like a game of telephone but with emojis all mixed in. It's silly and it's fun and we think you're gonna like it... 😏

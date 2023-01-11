@@ -14,7 +14,7 @@ const NavBar = (props) => {
     	 <Col className='center content-end' xs={3}>
     	 	<a href='#how'>🤔 HOW?</a>
     	 </Col>
-    	 <Col className='center' xs={3}>
+    	 <Col className='center playNav' xs={3}>
     	 	<a href='#play'>▶️ PLAY</a>
     	 </Col>
     </Row>
