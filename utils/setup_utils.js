@@ -166,13 +166,18 @@ module.exports = {
         }
     },
     sendOnboardingTexts: async (users, initiatingUser) => {
+        const messagesSent = []
         users.filter((user) => user.needsOnboarding).forEach(async (user) => {
+
             const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of ${GAME_NAME}! You will receive another text from this phone number when it's your turn!
 
 Learn more here: ${process.env.SERVER_URL}`
-            await utils.bot.startConversationWithUser(user.phoneNumber);
-            await utils.bot.say(WELCOME_MESSAGE)
-            await models.user.update({needsOnboarding: false}, {where: {id: user.id}})
+            if (!messagesSent.includes(user.phoneNumber)) {
+                await utils.bot.startConversationWithUser(user.phoneNumber);
+                await utils.bot.say(WELCOME_MESSAGE)
+                await models.user.update({needsOnboarding: false}, {where: {id: user.id}})
+                messagesSent.push(user.phoneNumber);
+            }
         })
     },
     sendGameFailedToSetupText: async (phoneNumber, message) => {
