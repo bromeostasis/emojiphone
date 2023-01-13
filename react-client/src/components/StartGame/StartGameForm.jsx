@@ -26,6 +26,7 @@ for (let i = 0; i < REACT_APP_MINIMUM_PLAYER_COUNT; i++) {
 	defaultValues.players.push(emptyPlayer);
 }
 
+
 function StartGameForm() {
 	const { register, clearErrors, control, handleSubmit, reset, setError, formState: { errors }  } = useForm({
 		defaultValues
