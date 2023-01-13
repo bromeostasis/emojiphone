@@ -167,17 +167,16 @@ module.exports = {
     },
     sendOnboardingTexts: async (users, initiatingUser) => {
         const messagesSent = []
-        console.log(users);
         users.filter((user) => user.needsOnboarding).forEach(async (user) => {
-            console.log('Attempting to send text to user', user.id);
 
             const WELCOME_MESSAGE = `Your friend ${initiatingUser.firstName} invited you to a game of ${GAME_NAME}! You will receive another text from this phone number when it's your turn!
 
 Learn more here: ${process.env.SERVER_URL}`
             if (!messagesSent.includes(user.phoneNumber)) {
-                console.log('Actually sending text to user', user.id);
-                await utils.bot.startConversationWithUser(user.phoneNumber);
-                await utils.bot.say(WELCOME_MESSAGE)
+                let bot = await utils.controller.spawn();
+
+                await bot.startConversationWithUser(user.phoneNumber);
+                await bot.say(WELCOME_MESSAGE)
                 await models.user.update({needsOnboarding: false}, {where: {id: user.id}})
                 messagesSent.push(user.phoneNumber);
             }

@@ -28,7 +28,7 @@ for (let i = 0; i < REACT_APP_MINIMUM_PLAYER_COUNT; i++) {
 
 
 function StartGameForm() {
-	const { register, clearErrors, control, handleSubmit, reset, setError, formState: { errors }  } = useForm({
+	const { register, clearErrors, control, handleSubmit, reset, setError, setValue, formState: { errors }  } = useForm({
 		defaultValues
 	});
 	const { fields, append, remove } = useFieldArray({
@@ -44,6 +44,7 @@ function StartGameForm() {
 	});
 
 	const submitForm = async (data) => {
+		reset(); // Prevent duplicate submissions
 		const response = await fetch('/startGame', {
 			method: 'POST',
 			headers: {
@@ -53,12 +54,24 @@ function StartGameForm() {
 		});
 		const body = await response.json();
 		if (response.status !== 200) {
-			setError('players.root', { type: 'custom', message: body.message }) 
+			setError('players.root', { type: 'custom', message: body.message })
+			restoreFormAfterFailure(data); // If there's a server error, restore previous form data so user can keep working on it
 		} else {
 			clearErrors('players.root')
 			toast('Game successfully created! You will receive a text as confirmation.', {position: "bottom-left"})
 			reset();
 		}
+	}
+
+	const restoreFormAfterFailure = (data) => {
+		setValue('players', data.players);
+		remove();
+		for (const player of data.players) {
+			append(player)
+		}
+		setValue('firstName', data.firstName);
+		setValue('lastName', data.lastName);
+		setValue('phoneNumber', data.phoneNumber);
 	}
   
 	return (

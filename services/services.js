@@ -37,7 +37,8 @@ module.exports = {
 		const creatingUser = await setupUtils.createUser({
 			firstName,
 			lastName,
-			phoneNumber: phone(phoneNumber, 'USA')[0]
+			phoneNumber: phone(phoneNumber, 'USA')[0],
+			needsOnboarding: false,
 		})
 
 		for (const user of body.players) {
