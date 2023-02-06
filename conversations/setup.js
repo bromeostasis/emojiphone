@@ -17,7 +17,6 @@ const NOT_READY_YET_THREAD = 'notReadyYet';
 const QUIT_GAME_THREAD = 'quitGame';
 const ADD_CONTACTS_THREAD = 'addContacts';
 const INVALID_INPUT_THREAD = 'invalidInput';
-const ADDED_PHONE_NUMBER_THREAD = 'addedPhone';
 const MULTI_CONTACT_THREAD = 'multiContact';
 const ERROR_THREAD = 'errorThread';
 const DUPLICATE_NUMBER_THREAD = 'duplicateThread';
@@ -86,10 +85,10 @@ module.exports = {
         let phoneNumber = phone(convo.vars.channel)[0];
         let user;
         try {
-            await convo.setVar("addedUsers", '');
-            await convo.setVar("invalidUsers", '');
-            await convo.setVar("duplicateUsers", '');
-            await convo.setVar("ingameUsers", '');
+            await convo.setVar("addedUsersPhrase", '');
+            await convo.setVar("invalidUsersPhrase", '');
+            await convo.setVar("duplicateUsersPhrase", '');
+            await convo.setVar("ingameUsersPhrase", '');
             user = await utils.getUserByPhoneNumber(phoneNumber);
             await convo.setVar("contactsLeft", process.env.MINIMUM_PLAYER_COUNT - 1);
             await convo.setVar("gameUsers", []);
@@ -165,21 +164,7 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
     },
     addContactsMessages: (convo) => {
         convo.addMessage({
-            text: 'Successfully added your contact!',
-            action: ADD_CONTACTS_THREAD
-        }, ADDED_PHONE_NUMBER_THREAD);
-
-
-        convo.addMessage({ // TODO: Entire phrase is variable.
-            text: `Thank you for uploading contacts. 
-
-The following contacts were added to your game: {{vars.addedUsers}}
-
-The following contacts had invalid phone numbers: {{vars.invalidUsers}}
-
-The following contacts are already in your game: {{vars.duplicateUsers}}
-
-The following contacts are already playing in another game: {{vars.ingameUsers}}
+            text: `Thank you for uploading your contacts.{{vars.addedUsersPhrase}} {{vars.invalidUsersPhrase}} {{vars.duplicateUsersPhrase}} {{vars.ingameUsersPhrase}}
 `,
             action: ADD_CONTACTS_THREAD
         }, MULTI_CONTACT_THREAD);
@@ -226,10 +211,7 @@ The following contacts are already playing in another game: {{vars.ingameUsers}}
 }
 
 const handleContactCards = async (response, inConvo, bot, full_message) => {
-    console.log('Whats in the box?!')
-    // console.log('full msga', full_message)
-    console.log('response', response)
-    if (full_message && full_message.MediaContentType0 && full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
+    if (full_message && full_message.NumSegments && parseInt(full_message.NumSegments) > 0) {
         try {
             const numSegments = parseInt(full_message.NumSegments)
             const validUsersAdded = []
@@ -241,59 +223,55 @@ const handleContactCards = async (response, inConvo, bot, full_message) => {
                 if (full_message[typeKey] && full_message[typeKey].toLowerCase() == V_CARD_TYPE) {
                     const urlKey = `MediaUrl${i}`
                     const url = full_message[urlKey]
-                    console.log('url', url)
                     const userObj = await utils.vCardMessageToUser(url);
             
                     let validatedNumber = phone(userObj.phoneNumber, "USA");
-                    console.log('number?!', validatedNumber)
                     if (validatedNumber.length == 0 ){
-                        // return await inConvo.gotoThread(INVALID_NUMBER_THREAD);
-                        console.log('invalid')
-                        invalidUsersAdded.push(userObj)
+                        invalidUsersAdded.push(userObj.firstName)
+                    } else {
+                        userObj.phoneNumber = validatedNumber[0];
+                        let usersInGame = inConvo.vars.gameUsers;
+                        if (setupUtils.containsPhoneNumber(usersInGame, userObj.phoneNumber)) {
+                            duplicateUsersAdded.push(userObj.firstName)
+                        } else {
+                            const dbUser = await setupUtils.createUser(userObj)
+                            const isInActiveGame = await setupUtils.isUserInActiveGame(dbUser)
+                            if (isInActiveGame) {
+                                ingameUsersAdded.push(userObj.firstName)
+                            } else {
+                                usersInGame.push(dbUser);
+                                await inConvo.setVar("gameUsers", usersInGame);
+                                let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
+                                await inConvo.setVar("contactsLeft", contactsLeft);
+                                validUsersAdded.push(userObj.firstName) // TODO: Likely concat?
+                            }
+                        }
                     }
 
-                    userObj.phoneNumber = validatedNumber[0];
-                    let usersInGame = inConvo.vars.gameUsers;
-                    if (setupUtils.containsPhoneNumber(usersInGame, userObj.phoneNumber)) {
-                        console.log('duplicate')
-                        duplicateUsersAdded.push(userObj)
-                        // await inConvo.gotoThread(DUPLICATE_NUMBER_THREAD);
-                    } else {
-                        const dbUser = await setupUtils.createUser(userObj)
-                        const isInActiveGame = await setupUtils.isUserInActiveGame(dbUser)
-                        if (isInActiveGame) {
-                            console.log('ingame')
-                            ingameUsersAdded.push(dbUser)
-                            // return await inConvo.gotoThread(ALREADY_ACTIVE_THREAD)
-                        }
-                        usersInGame.push(dbUser);
-                        await inConvo.setVar("gameUsers", usersInGame);
-                        let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
-                        await inConvo.setVar("contactsLeft", contactsLeft);
-                        console.log('legit')
-                        validUsersAdded.push(userObj) // TODO: Likely concat?
-                        // await inConvo.gotoThread(ADDED_PHONE_NUMBER_THREAD);
-                    }
                 } else {
                     console.log('Message not VCARD. Skipping')
                 }
             }
-            console.log('validUsersAdded', validUsersAdded);
-            console.log('invalidUsersAdded', invalidUsersAdded);
-            console.log('duplicateUsersAdded', duplicateUsersAdded);
-            console.log('ingameUsersAdded', ingameUsersAdded);
+            const addedUsersPhrase = validUsersAdded.length <= 0 ? '' : `
 
-            await inConvo.setVar("addedUsers", validUsersAdded.map((user) => user.firstName).join(', '));
-            await inConvo.setVar("invalidUsers", invalidUsersAdded.map((user) => user.firstName).join(', '));
-            await inConvo.setVar("duplicateUsers", duplicateUsersAdded.map((user) => user.firstName).join(', '));
-            await inConvo.setVar("ingameUsers", ingameUsersAdded.map((user) => user.firstName).join(', '));
+The following contacts were added to your game: ${validUsersAdded.join(', ')}`
+            const invalidUsersPhrase = invalidUsersAdded.length <= 0 ? '' : `
+
+The following contacts had invalid phone numbers: ${invalidUsersAdded.join(', ')}`
+
+            const duplicateUsersPhrase = duplicateUsersAdded.length <= 0 ? '' : `
+
+The following contacts are already in your game: ${duplicateUsersAdded.join(', ')}`
+            const ingameUsersPhrase = ingameUsersAdded.length <= 0 ? '' : `
+
+The following contacts are already playing in another game: ${ingameUsersAdded.join(', ')}`
+
+            await inConvo.setVar("addedUsersPhrase", addedUsersPhrase);
+            await inConvo.setVar("invalidUsersPhrase", invalidUsersPhrase);
+            await inConvo.setVar("duplicateUsersPhrase", duplicateUsersPhrase);
+            await inConvo.setVar("ingameUsersPhrase", ingameUsersPhrase);
 
             await inConvo.gotoThread(MULTI_CONTACT_THREAD)
-            // if (validUsersAdded.length > 0) {
-            // } else {
-            //     await inConvo.gotoThread(ERROR_THREAD)
-            // }
-
 
         } catch (err) { // TODO: Better error handling
             console.log("Error downloading vcard", err);
