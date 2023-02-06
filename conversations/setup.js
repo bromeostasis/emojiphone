@@ -18,6 +18,7 @@ const QUIT_GAME_THREAD = 'quitGame';
 const ADD_CONTACTS_THREAD = 'addContacts';
 const INVALID_INPUT_THREAD = 'invalidInput';
 const ADDED_PHONE_NUMBER_THREAD = 'addedPhone';
+const MULTI_CONTACT_THREAD = 'multiContact';
 const ERROR_THREAD = 'errorThread';
 const DUPLICATE_NUMBER_THREAD = 'duplicateThread';
 const INVALID_NUMBER_THREAD = 'invalidNumber';
@@ -85,6 +86,10 @@ module.exports = {
         let phoneNumber = phone(convo.vars.channel)[0];
         let user;
         try {
+            await convo.setVar("addedUsers", '');
+            await convo.setVar("invalidUsers", '');
+            await convo.setVar("duplicateUsers", '');
+            await convo.setVar("ingameUsers", '');
             user = await utils.getUserByPhoneNumber(phoneNumber);
             await convo.setVar("contactsLeft", process.env.MINIMUM_PLAYER_COUNT - 1);
             await convo.setVar("gameUsers", []);
@@ -154,38 +159,7 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
             }, quitGameResponse,
             {
                 default: true,
-                handler: async (response, inConvo, bot, full_message) => {
-                    if (full_message && full_message.MediaContentType0 && full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
-                        try {
-                            let user = await utils.vCardMessageToUser(full_message);
-                            let validatedNumber = phone(user.phoneNumber, "USA");
-                            if (validatedNumber.length == 0 ){
-                                return await inConvo.gotoThread(INVALID_NUMBER_THREAD);
-                            }
-                            user.phoneNumber = validatedNumber[0];
-                            let users = inConvo.vars.gameUsers;
-                            if (setupUtils.containsPhoneNumber(users, user.phoneNumber)) {
-                                await inConvo.gotoThread(DUPLICATE_NUMBER_THREAD);
-                            } else {
-                                user = await setupUtils.createUser(user)
-                                const isInActiveGame = await setupUtils.isUserInActiveGame(user)
-                                if (isInActiveGame) {
-                                    return await inConvo.gotoThread(ALREADY_ACTIVE_THREAD)
-                                }
-                                users.push(user);
-                                await inConvo.setVar("gameUsers", users);
-                                let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
-                                await inConvo.setVar("contactsLeft", contactsLeft);
-                                await inConvo.gotoThread(ADDED_PHONE_NUMBER_THREAD);
-                            }
-                        } catch (err) {
-                            console.log("Error downloading vcard", err);
-                            return await inConvo.gotoThread(ERROR_THREAD);
-                        }
-                    } else {
-                        await inConvo.gotoThread(INVALID_INPUT_THREAD);
-                    }
-                },
+                handler: handleContactCards,
             }
         ], {}, ADD_CONTACTS_THREAD);
     },
@@ -194,6 +168,21 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
             text: 'Successfully added your contact!',
             action: ADD_CONTACTS_THREAD
         }, ADDED_PHONE_NUMBER_THREAD);
+
+
+        convo.addMessage({ // TODO: Entire phrase is variable.
+            text: `Thank you for uploading contacts. 
+
+The following contacts were added to your game: {{vars.addedUsers}}
+
+The following contacts had invalid phone numbers: {{vars.invalidUsers}}
+
+The following contacts are already in your game: {{vars.duplicateUsers}}
+
+The following contacts are already playing in another game: {{vars.ingameUsers}}
+`,
+            action: ADD_CONTACTS_THREAD
+        }, MULTI_CONTACT_THREAD);
 
         convo.addMessage({
             text: `Sorry, I couldn't understand you. Please send a contact, or say "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" or "${KEYWORDS.QUIT_SETUP_KEYWORD}".`,
@@ -234,4 +223,83 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
             action: ADD_CONTACTS_THREAD,
         }, NOT_READY_YET_THREAD);
     },
+}
+
+const handleContactCards = async (response, inConvo, bot, full_message) => {
+    console.log('Whats in the box?!')
+    // console.log('full msga', full_message)
+    console.log('response', response)
+    if (full_message && full_message.MediaContentType0 && full_message.MediaContentType0.toLowerCase() === V_CARD_TYPE) {
+        try {
+            const numSegments = parseInt(full_message.NumSegments)
+            const validUsersAdded = []
+            const invalidUsersAdded = []
+            const duplicateUsersAdded = []
+            const ingameUsersAdded = []
+            for (let i = 0; i < numSegments; i++) {
+                const typeKey = `MediaContentType${i}`
+                if (full_message[typeKey] && full_message[typeKey].toLowerCase() == V_CARD_TYPE) {
+                    const urlKey = `MediaUrl${i}`
+                    const url = full_message[urlKey]
+                    console.log('url', url)
+                    const userObj = await utils.vCardMessageToUser(url);
+            
+                    let validatedNumber = phone(userObj.phoneNumber, "USA");
+                    console.log('number?!', validatedNumber)
+                    if (validatedNumber.length == 0 ){
+                        // return await inConvo.gotoThread(INVALID_NUMBER_THREAD);
+                        console.log('invalid')
+                        invalidUsersAdded.push(userObj)
+                    }
+
+                    userObj.phoneNumber = validatedNumber[0];
+                    let usersInGame = inConvo.vars.gameUsers;
+                    if (setupUtils.containsPhoneNumber(usersInGame, userObj.phoneNumber)) {
+                        console.log('duplicate')
+                        duplicateUsersAdded.push(userObj)
+                        // await inConvo.gotoThread(DUPLICATE_NUMBER_THREAD);
+                    } else {
+                        const dbUser = await setupUtils.createUser(userObj)
+                        const isInActiveGame = await setupUtils.isUserInActiveGame(dbUser)
+                        if (isInActiveGame) {
+                            console.log('ingame')
+                            ingameUsersAdded.push(dbUser)
+                            // return await inConvo.gotoThread(ALREADY_ACTIVE_THREAD)
+                        }
+                        usersInGame.push(dbUser);
+                        await inConvo.setVar("gameUsers", usersInGame);
+                        let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
+                        await inConvo.setVar("contactsLeft", contactsLeft);
+                        console.log('legit')
+                        validUsersAdded.push(userObj) // TODO: Likely concat?
+                        // await inConvo.gotoThread(ADDED_PHONE_NUMBER_THREAD);
+                    }
+                } else {
+                    console.log('Message not VCARD. Skipping')
+                }
+            }
+            console.log('validUsersAdded', validUsersAdded);
+            console.log('invalidUsersAdded', invalidUsersAdded);
+            console.log('duplicateUsersAdded', duplicateUsersAdded);
+            console.log('ingameUsersAdded', ingameUsersAdded);
+
+            await inConvo.setVar("addedUsers", validUsersAdded.map((user) => user.firstName).join(', '));
+            await inConvo.setVar("invalidUsers", invalidUsersAdded.map((user) => user.firstName).join(', '));
+            await inConvo.setVar("duplicateUsers", duplicateUsersAdded.map((user) => user.firstName).join(', '));
+            await inConvo.setVar("ingameUsers", ingameUsersAdded.map((user) => user.firstName).join(', '));
+
+            await inConvo.gotoThread(MULTI_CONTACT_THREAD)
+            // if (validUsersAdded.length > 0) {
+            // } else {
+            //     await inConvo.gotoThread(ERROR_THREAD)
+            // }
+
+
+        } catch (err) { // TODO: Better error handling
+            console.log("Error downloading vcard", err);
+            return await inConvo.gotoThread(ERROR_THREAD);
+        }
+    } else {
+        await inConvo.gotoThread(INVALID_INPUT_THREAD);
+    }
 }
