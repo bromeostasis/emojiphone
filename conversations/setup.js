@@ -19,8 +19,6 @@ const ADD_CONTACTS_THREAD = 'addContacts';
 const INVALID_INPUT_THREAD = 'invalidInput';
 const MULTI_CONTACT_THREAD = 'multiContact';
 const ERROR_THREAD = 'errorThread';
-const DUPLICATE_NUMBER_THREAD = 'duplicateThread';
-const INVALID_NUMBER_THREAD = 'invalidNumber';
 const ADD_USER_THREAD = 'addUser';
 const ADDED_USER_THREAD = 'addedUser';
 const CONTACT_ERROR_THREAD = 'contactError';
@@ -30,8 +28,7 @@ const COMPLETE_CONVO_ACTION = 'complete';
 const ALREADY_ACTIVE_THREAD = 'alreadyActive';
 const DEFAULT_THREAD = 'default';
 const NAME_PATTERN = /^[a-zA-Z][a-zA-Z\-\s]+$/;
-const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. Please try again or contact our support team at TODO.";
-const FIRST_TIME_WELCOME_PROMPT = `Welcome to ${GAME_NAME}! Thanks for starting a new game!`;
+const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. Please wait a moment and try again."; // TODO: Support email?!
 const ALREADY_ACTIVE_ERROR = "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!).";
 const ALREADY_ACTIVE_GAME_ERROR = ALREADY_ACTIVE_ERROR + `
 
@@ -66,12 +63,12 @@ module.exports = {
         module.exports.addContactsMessages(convo);
 
         convo.addMessage({
-            text: `Welcome to ${GAME_NAME}! Thanks for starting a new game!`,
+            text: `👋👋 Welcome to ${GAME_NAME}! Thanks for starting a new game!`,
             action: ADD_USER_THREAD
         }, NEW_USER_THREAD);
 
         convo.addMessage({
-            text: `Welcome back to ${GAME_NAME}, {{vars.currentUser.firstName}}! Thanks for starting a new game!`,
+            text: `👋👋 Welcome back to ${GAME_NAME}, {{vars.currentUser.firstName}}! Thanks for starting a new game!`,
             action: ADD_CONTACTS_THREAD
         }, EXISTING_USER_THREAD);
 
@@ -93,10 +90,8 @@ module.exports = {
             await convo.setVar("contactsLeft", process.env.MINIMUM_PLAYER_COUNT - 1);
             await convo.setVar("gameUsers", []);
             if (!user) {
-                await convo.setVar("welcomeText", FIRST_TIME_WELCOME_PROMPT);
                 await convo.gotoThread(NEW_USER_THREAD);
             } else {
-                await convo.setVar("welcomeText", `Welcome back to ${GAME_NAME}, ${user.firstName}! Thanks for starting a new game!`);
                 await convo.setVar("currentUser", user);
                 await convo.gotoThread(EXISTING_USER_THREAD);
             }
@@ -105,7 +100,7 @@ module.exports = {
         }
     },
     addCreatorAsUserQuestion: (convo) => {
-        convo.addQuestion(`Since this is your first time playing, we'll need a way to identify you. What's your name (you may enter first and last)?
+        convo.addQuestion(`Since this is your first time playing, we'll need a way to identify you 🤔 What's your name (you may enter first and last)?
 
 Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
             quitGameResponse,
@@ -141,7 +136,7 @@ Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
     },
     // TODO: Pull out callbacks as separate functions
     addContactsQuestion: async (convo) => {
-        convo.addQuestion(`Time to set up your game! Text me at least {{vars.contactsLeft}} more contacts to be able to start your game.
+        convo.addQuestion(`Time to set up your game 🎉 Text me at least {{vars.contactsLeft}} more contact cards (shared from your phone's contact app) to be able to start your game. You can send as many contact cards as you'd like all at once!
 
 Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${KEYWORDS.QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
             {
@@ -164,13 +159,13 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
     },
     addContactsMessages: (convo) => {
         convo.addMessage({
-            text: `Thank you for uploading your contacts.{{vars.addedUsersPhrase}} {{vars.invalidUsersPhrase}} {{vars.duplicateUsersPhrase}} {{vars.ingameUsersPhrase}}
+            text: `Thanks for uploading your contact cards! 🙇‍♂️📱{{vars.addedUsersPhrase}} {{vars.invalidUsersPhrase}} {{vars.duplicateUsersPhrase}} {{vars.ingameUsersPhrase}}
 `,
             action: ADD_CONTACTS_THREAD
         }, MULTI_CONTACT_THREAD);
 
         convo.addMessage({
-            text: `Sorry, I couldn't understand you. Please send a contact, or say "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" or "${KEYWORDS.QUIT_SETUP_KEYWORD}".`,
+            text: `Sorry, I couldn't understand you. Please send at least one contact card or say "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" or "${KEYWORDS.QUIT_SETUP_KEYWORD}".`,
             action: ADD_CONTACTS_THREAD
         }, INVALID_INPUT_THREAD);
 
@@ -180,24 +175,15 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
         }, ERROR_THREAD);
 
         convo.addMessage({
-            text: "Sorry, you've already added someone with that phone number. Please choose a contact with a phone number different from any you've added so far",
-            action: ADD_CONTACTS_THREAD
-        }, DUPLICATE_NUMBER_THREAD);
-
-        convo.addMessage({
             text: ALREADY_ACTIVE_ERROR,
             action: ADD_CONTACTS_THREAD
         }, ALREADY_ACTIVE_THREAD);
-
-        convo.addMessage({
-            text: "Sorry, the phone number for that contact is invalid. Please try another contact with a valid US-based phone number.",
-            action: ADD_CONTACTS_THREAD
-        }, INVALID_NUMBER_THREAD);
         
         convo.addMessage({
             text: `Ok, you will not start the game. ${PHRASES.START_WEB_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
         }, QUIT_GAME_THREAD);
+
         convo.addMessage({
             text: `Ok, we will begin the game! ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`,
             action: COMPLETE_CONVO_ACTION
@@ -254,17 +240,16 @@ const handleContactCards = async (response, inConvo, bot, full_message) => {
             }
             const addedUsersPhrase = validUsersAdded.length <= 0 ? '' : `
 
-The following contacts were added to your game: ${validUsersAdded.join(', ')}`
-            const invalidUsersPhrase = invalidUsersAdded.length <= 0 ? '' : `
-
-The following contacts had invalid phone numbers: ${invalidUsersAdded.join(', ')}`
-
+The following people were added to your game: ${validUsersAdded.join(', ')}`
             const duplicateUsersPhrase = duplicateUsersAdded.length <= 0 ? '' : `
 
-The following contacts are already in your game: ${duplicateUsersAdded.join(', ')}`
+The following people are already in your game: ${duplicateUsersAdded.join(', ')}`
+            const invalidUsersPhrase = invalidUsersAdded.length <= 0 ? '' : `
+
+The following people had invalid phone numbers and could NOT be added to your game: ${invalidUsersAdded.join(', ')}`
             const ingameUsersPhrase = ingameUsersAdded.length <= 0 ? '' : `
 
-The following contacts are already playing in another game: ${ingameUsersAdded.join(', ')}`
+The following people are already in another game and could NOT be added to your game: ${ingameUsersAdded.join(', ')}`
 
             await inConvo.setVar("addedUsersPhrase", addedUsersPhrase);
             await inConvo.setVar("invalidUsersPhrase", invalidUsersPhrase);
