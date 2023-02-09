@@ -136,7 +136,7 @@ Text "${KEYWORDS.QUIT_SETUP_KEYWORD}" at any time to quit the setup process.`, [
     },
     // TODO: Pull out callbacks as separate functions
     addContactsQuestion: async (convo) => {
-        convo.addQuestion(`Time to set up your game 🎉 Text me at least {{vars.contactsLeft}} more contact cards (shared from your phone's contact app) to be able to start your game. You can send as many contact cards as you'd like all at once!
+        convo.addQuestion(`Text me at least {{vars.contactsLeft}} more contact cards (shared from your phone's contact app) to be able to start your game. You can send as many contact cards as you'd like all at once! Note that it may take a few seconds for the system process your contacts.
 
 Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game or "${KEYWORDS.QUIT_SETUP_KEYWORD}" if you don't want to play.`, [
             {
