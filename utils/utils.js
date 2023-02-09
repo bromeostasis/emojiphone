@@ -91,4 +91,7 @@ module.exports = {
     getPostgresStorageKeyFromPhoneNumber: (phoneNumber) => {
         return `twilio-sms/conversations/${phoneNumber}-${phoneNumber}/`
     },
+    getNumberOfTurnsLeftMessage: (numberOfTurnsLeft) => {
+        return `There ${(numberOfTurnsLeft === 1) ? 'is 1 turn' : `are ${numberOfTurnsLeft} turns`} left in your game!`
+    }
 }

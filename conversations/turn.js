@@ -91,7 +91,7 @@ ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`);
                             const { gameId, nextUser } = inConvo.vars.currentTurn;
                             if (nextUser) {
                                 const numberOfTurnsLeft = await turnUtils.getNumberOfTurnsLeft(gameId)
-                                await inConvo.setVar('nextTurnMessage', `It is now ${nextUser.firstName}'s turn. There ${(numberOfTurnsLeft === 1) ? 'is 1 turn' : `are ${numberOfTurnsLeft} turns`} left in your game! You will be notified when the game completes.
+                                await inConvo.setVar('nextTurnMessage', `It is now ${nextUser.firstName}'s turn. ${utils.getNumberOfTurnsLeftMessage(numberOfTurnsLeft)} You will be notified when the game completes.
 
 ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`)
                             } else {
