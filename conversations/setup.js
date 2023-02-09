@@ -11,7 +11,6 @@ const cancelConversation = require('./cancel');
 const statusConversation = require('./status');
 const models = require('../models');
 
-const V_CARD_TYPE = 'text/x-vcard';
 const START_GAME_THREAD = 'startGame';
 const NOT_READY_YET_THREAD = 'notReadyYet';
 const QUIT_GAME_THREAD = 'quitGame';
@@ -199,45 +198,13 @@ Text "${KEYWORDS.DONE_ADDING_CONTACTS_KEYWORD}" when you want to start the game 
 const handleContactCards = async (response, inConvo, bot, full_message) => {
     if (full_message && full_message.NumSegments && parseInt(full_message.NumSegments) > 0) {
         try {
-            const numSegments = parseInt(full_message.NumSegments)
-            const validUsersAdded = []
-            const invalidUsersAdded = []
-            const duplicateUsersAdded = []
-            const ingameUsersAdded = []
-            for (let i = 0; i < numSegments; i++) {
-                const typeKey = `MediaContentType${i}`
-                if (full_message[typeKey] && full_message[typeKey].toLowerCase() == V_CARD_TYPE) {
-                    const urlKey = `MediaUrl${i}`
-                    const url = full_message[urlKey]
-                    const userObj = await utils.vCardMessageToUser(url);
+            const {
+                validUsersAdded,
+                invalidUsersAdded,
+                duplicateUsersAdded,
+                ingameUsersAdded,
+            } = await setupUtils.processMessageWithContactCards(full_message, inConvo)
             
-                    let validatedNumber = phone(userObj.phoneNumber, "USA");
-                    if (validatedNumber.length == 0 ){
-                        invalidUsersAdded.push(userObj.firstName)
-                    } else {
-                        userObj.phoneNumber = validatedNumber[0];
-                        let usersInGame = inConvo.vars.gameUsers;
-                        if (setupUtils.containsPhoneNumber(usersInGame, userObj.phoneNumber)) {
-                            duplicateUsersAdded.push(userObj.firstName)
-                        } else {
-                            const dbUser = await setupUtils.createUser(userObj)
-                            const isInActiveGame = await setupUtils.isUserInActiveGame(dbUser)
-                            if (isInActiveGame) {
-                                ingameUsersAdded.push(userObj.firstName)
-                            } else {
-                                usersInGame.push(dbUser);
-                                await inConvo.setVar("gameUsers", usersInGame);
-                                let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
-                                await inConvo.setVar("contactsLeft", contactsLeft);
-                                validUsersAdded.push(userObj.firstName) // TODO: Likely concat?
-                            }
-                        }
-                    }
-
-                } else {
-                    console.log('Message not VCARD. Skipping')
-                }
-            }
             const addedUsersPhrase = validUsersAdded.length <= 0 ? '' : `
 
 The following people were added to your game: ${validUsersAdded.join(', ')}`
