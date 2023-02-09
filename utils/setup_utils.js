@@ -206,7 +206,7 @@ Learn more here: ${process.env.SERVER_URL}`
      * @param  {Object} full_message  Message object from BotKit. Key parameters are NumSegments (number of messages), and several contact cards
      *                                    Contact card 0 should contain MediaContentType0, which should equal V_CARD_TYPE and MediaUrl0, which points to a vcard for download
      * @param  {Object} inConvo  Conversation object from BotKit. Importantly contains the conversation variables for the current setup thread.
-     * @returns {Object} returnObject  Contains four arrays. Each array contains 0 or more user "object"s (first, last, phoneNumber).
+     * @returns {Object} returnObject  Contains four arrays. Each array contains 0 or more user first names that were either added to the game or skipped. This could be extended to include the whole object if necessary.
      */
     processMessageWithContactCards: async (full_message, inConvo) => {
         const numSegments = parseInt(full_message.NumSegments)
