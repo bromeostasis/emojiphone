@@ -33,7 +33,7 @@ module.exports = {
         }
     },
     getCurrentTurn: async (gameId) => {
-        return await models.turn.findOne({where: {gameId: gameId, isCurrent: true}, include: [{model: models.user, as: "user"}]})
+        return await models.turn.findOne({where: {gameId: gameId, isCurrent: true}, include: [{model: models.user, as: "user"}, {model: models.user, as: "nextUser"}]})
     },
     getPreviousTurn: async (currentTurn) => {
         return await models.turn.findOne({where: {gameId: currentTurn.gameId, nextUserId: currentTurn.userId}})
