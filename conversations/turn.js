@@ -37,7 +37,7 @@ module.exports = {
             action: COMPLETE_ACTION
         }, TURN_ERROR_THREAD)
 
-        convo.addMessage({text: `Thanks, your turn has been recorded! You will be notified when the game completes. ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`, action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
+        convo.addMessage({text: `Thanks, your turn has been recorded 📝💯🎉 {{vars.nextTurnMessage}}`, action: COMPLETE_ACTION}, TURN_SUCCESS_THREAD);
 
         module.exports.addTurnQuestion(convo);
         convo.after(async (results, bot) => {
@@ -58,6 +58,7 @@ module.exports = {
     setConversationVariables: async (convo) => {
         let previousTurn = await turnUtils.getPreviousTurn(convo.vars.currentTurn);
         await convo.setVar("previousTurn", previousTurn);
+        await convo.setVar('nextTurnMessage', `You were the last player this round! You should receive a message with your game's transcript shortly.`);
         if (!previousTurn) {
             await convo.setVar("currentMessageType", MessageType.text);
         } else {
@@ -84,6 +85,14 @@ module.exports = {
                                 receivedAt: new Date(),
                                 isCurrent: false
                             }, {where: {id: inConvo.vars.currentTurn.id}});
+
+                            const { gameId, nextUser } = inConvo.vars.currentTurn;
+                            if (nextUser) {
+                                const numberOfTurnsLeft = await turnUtils.getNumberOfTurnsLeft(gameId)
+                                await inConvo.setVar('nextTurnMessage', `It is now ${nextUser.firstName}'s turn. There ${(numberOfTurnsLeft === 1) ? 'is 1 turn' : `are ${numberOfTurnsLeft} turns`} left in your game! You will be notified when the game completes.
+
+${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`)
+                            }
                             await inConvo.gotoThread(TURN_SUCCESS_THREAD);
                         } catch(err){
                             console.log(err);
@@ -102,7 +111,7 @@ module.exports = {
      * @param  {object} completedTurn   Database Turn that was just completed.
      */
     beginNextTurn: async (completedTurn) => {
-        let nextTurn = await models.turn.findOne({where: {userId: completedTurn.nextUserId, gameId: completedTurn.gameId}, include: [{model: models.user, as: "user"}]})
+        let nextTurn = await models.turn.findOne({where: {userId: completedTurn.nextUserId, gameId: completedTurn.gameId}, include: [{model: models.user, as: "user"}, {model: models.user, as: "nextUser"}]})
         nextTurn.update({isCurrent: true});
         await module.exports.takeTurn(nextTurn)
     },
