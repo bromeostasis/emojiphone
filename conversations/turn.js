@@ -33,7 +33,7 @@ module.exports = {
         }, TURN_FAIL_THREAD);
 
         convo.addMessage({
-            text: "Sorry, we encountered an error processing your turn. Please contact our support team at TODO.",
+            text: "Sorry, we encountered an error processing your turn. Please wait a moment and try again.",
             action: COMPLETE_ACTION
         }, TURN_ERROR_THREAD)
 
@@ -58,7 +58,9 @@ module.exports = {
     setConversationVariables: async (convo) => {
         let previousTurn = await turnUtils.getPreviousTurn(convo.vars.currentTurn);
         await convo.setVar("previousTurn", previousTurn);
-        await convo.setVar('nextTurnMessage', `You were the last player this round! You should receive a message with your game's transcript shortly.`);
+        await convo.setVar('nextTurnMessage', `
+
+${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`);
         if (!previousTurn) {
             await convo.setVar("currentMessageType", MessageType.text);
         } else {
@@ -92,6 +94,8 @@ module.exports = {
                                 await inConvo.setVar('nextTurnMessage', `It is now ${nextUser.firstName}'s turn. There ${(numberOfTurnsLeft === 1) ? 'is 1 turn' : `are ${numberOfTurnsLeft} turns`} left in your game! You will be notified when the game completes.
 
 ${PHRASES.CANCEL_PHRASE} ${PHRASES.STATUS_PHRASE}`)
+                            } else {
+                                await inConvo.setVar('nextTurnMessage', `You were the last player this round! You should receive a message with your game's transcript shortly.`);
                             }
                             await inConvo.gotoThread(TURN_SUCCESS_THREAD);
                         } catch(err){
