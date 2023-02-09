@@ -1,6 +1,7 @@
 require('custom-env').env(true);
 const _ = require("underscore");
 const { Op } = require('sequelize');
+const phone = require("phone");
 
 const gameUtils = require('./game_utils')
 
@@ -14,6 +15,8 @@ const turnConversation = require('../conversations/turn')
 // TODO: Should not be duplicated :( :(
 const ERROR_RESPONSE = "Sorry, we encountered an error processing your request. Please try again or contact our support team at TODO.";
 const ALREADY_ACTIVE_ERROR = "Sorry, you've added someone that is already playing in an active game. We currently only support one game at a time (though multi-game support is coming soon!).";
+
+const V_CARD_TYPE = 'text/x-vcard';
 
 module.exports = {
     INACTIVE_PLAYER_ERROR_CODE: 500,
@@ -197,5 +200,59 @@ Learn more here: ${process.env.SERVER_URL}`
             throw err;
         })
         return returnedUsers[0] // TODO: Validation?
+    },
+    /**
+     * Process a setup text from a user. Should contain at least one contact card and nothing else!
+     * @param  {Object} full_message  Message object from BotKit. Key parameters are NumSegments (number of messages), and several contact cards
+     *                                    Contact card 0 should contain MediaContentType0, which should equal V_CARD_TYPE and MediaUrl0, which points to a vcard for download
+     * @param  {Object} inConvo  Conversation object from BotKit. Importantly contains the conversation variables for the current setup thread.
+     * @returns {Object} returnObject  Contains four arrays. Each array contains 0 or more user first names that were either added to the game or skipped. This could be extended to include the whole object if necessary.
+     */
+    processMessageWithContactCards: async (full_message, inConvo) => {
+        const numSegments = parseInt(full_message.NumSegments)
+        const validUsersAdded = []
+        const invalidUsersAdded = []
+        const duplicateUsersAdded = []
+        const ingameUsersAdded = []
+        for (let i = 0; i < numSegments; i++) {
+            const typeKey = `MediaContentType${i}`
+            if (full_message[typeKey] && full_message[typeKey].toLowerCase() == V_CARD_TYPE) {
+                const urlKey = `MediaUrl${i}`
+                const url = full_message[urlKey]
+                const userObj = await utils.vCardMessageToUser(url);
+        
+                let validatedNumber = phone(userObj.phoneNumber, "USA");
+                if (validatedNumber.length == 0 ){
+                    invalidUsersAdded.push(userObj.firstName)
+                } else {
+                    userObj.phoneNumber = validatedNumber[0];
+                    let usersInGame = inConvo.vars.gameUsers;
+                    if (module.exports.containsPhoneNumber(usersInGame, userObj.phoneNumber)) {
+                        duplicateUsersAdded.push(userObj.firstName)
+                    } else {
+                        const dbUser = await module.exports.createUser(userObj)
+                        const isInActiveGame = await module.exports.isUserInActiveGame(dbUser)
+                        if (isInActiveGame) {
+                            ingameUsersAdded.push(userObj.firstName)
+                        } else {
+                            usersInGame.push(dbUser);
+                            await inConvo.setVar("gameUsers", usersInGame);
+                            let contactsLeft = (inConvo.vars.contactsLeft > 0) ? inConvo.vars.contactsLeft - 1 : 0;
+                            await inConvo.setVar("contactsLeft", contactsLeft);
+                            validUsersAdded.push(userObj.firstName)
+                        }
+                    }
+                }
+
+            } else {
+                console.log('Message not VCARD. Skipping')
+            }
+        }
+        return {
+            validUsersAdded,
+            invalidUsersAdded,
+            duplicateUsersAdded,
+            ingameUsersAdded,
+        }
     }
 }
