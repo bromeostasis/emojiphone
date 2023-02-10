@@ -33,22 +33,37 @@ module.exports = {
 
 		const { firstName, lastName, phoneNumber } = body
 
+		const phoneNumbers = []
+
+		const validatedPhone = phone(phoneNumber, 'USA')[0]
 		// TODO: needsOnboarding: false?
 		const creatingUser = await setupUtils.createUser({
 			firstName,
 			lastName,
-			phoneNumber: phone(phoneNumber, 'USA')[0],
+			phoneNumber: validatedPhone,
 			needsOnboarding: false,
 		})
 
+		phoneNumbers.push(validatedPhone)
+
 		for (const user of body.players) {
 			const { firstName, lastName, phoneNumber } = user
+			const validatedPhone = phone(phoneNumber, 'USA')[0]
+			if (phoneNumbers.includes(validatedPhone)) {
+				return {
+					status: 400,
+					response: {
+						message: 'Duplicate phone number detected. Please enter a unique phone number for each player!'
+					}
+				}
+			}
 			const dbUser = await setupUtils.createUser({
 				firstName,
 				lastName,
-				phoneNumber: phone(phoneNumber, 'USA')[0]
+				phoneNumber: validatedPhone
 			})
 			users.push(dbUser)
+			phoneNumbers.push(validatedPhone)
 		}
 
 		const response = await setupUtils.startGameIfReady({
