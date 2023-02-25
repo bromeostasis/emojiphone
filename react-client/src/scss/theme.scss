@@ -269,6 +269,13 @@ a {
 	}	
 }
 
+.imageLink {
+	line-height: 0;
+	img {
+		width: 1.5rem;
+	}
+}
+
 
 // Required
 @import "../../node_modules/bootstrap/scss/variables";
